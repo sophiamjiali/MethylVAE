@@ -32,10 +32,10 @@ num_workers: 4
 # Model parameters (not included in the sweep yet)
 encoder_dims: [6000, 4000]
 decoder_dims: [4000, 6000]
-max_epochs: 5
+max_epochs: 100
 
 # Hyperparameter sweep ranges
 batch_size: [32, 256]
-latent_dim: [64, 512]
-beta: [0.001, 2.0]
+latent_dim: [128, 512]
+beta: [0.001, 0.1]
 lr: [0.0001, 0.01]
