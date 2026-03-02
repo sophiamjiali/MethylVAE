@@ -11,6 +11,7 @@
 # Notes:            Begins an Optuna hyperparameter sweep
 # ==============================================================================
 
+from datetime import datetime
 from pathlib import Path
 import os
 import optuna
@@ -55,16 +56,18 @@ def main():
     db_path = os.path.join(experiment_dir, "betaVAE_hyperparam_sweep")
     experiment_storage = "sqlite:///{}.db".format(db_path)
 
+    study_name = f"betaVAE_sweep_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     study = optuna.create_study(
         storage = experiment_storage,
-        study_name = "betaVAE_hyperparam_sweep",
+        study_name = study_name,
         direction = "minimize",
         sampler = TPESampler(),
-        pruner = MedianPruner(n_warmup_steps = 5)
+        pruner = MedianPruner(n_warmup_steps = 20, n_startup_trials = 5)
     )
 
     # Perform the sweep
-    study.optimize(lambda trial: objective(trial, train_cfg))
+    study.optimize(lambda trial: objective(trial, study_name, train_cfg), 
+                   timeout = 86400, n_trials = 100)
 
     # Display the results
     if args.verbose:

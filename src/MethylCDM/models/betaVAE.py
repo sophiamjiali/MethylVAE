@@ -23,7 +23,7 @@ class MethylEncoder(nn.Module):
     def __init__(self,
                  input_dim: int,
                  latent_dim: int,
-                 hidden_dims: int):
+                 hidden_dims: list):
         super(MethylEncoder, self).__init__()
 
         self.input_dim = input_dim
@@ -59,7 +59,7 @@ class MethylDecoder(nn.Module):
     def __init__(self,
                  input_dim: int,
                  latent_dim: int,
-                 hidden_dims: int):
+                 hidden_dims: list):
         super(MethylDecoder, self).__init__()
 
         self.input_dim = input_dim
@@ -193,6 +193,8 @@ class BetaVAE(pl.LightningModule):
         self.log('train_loss', losses['total_loss'], prog_bar = True)
         self.log('train_recon', losses['reconstruction_loss'])
         self.log('train_kl', losses['kl_loss'])
+        self.log('train_kl_per_dim', 
+                 losses['kl_loss'] / self.hparams.latent_dim)
 
         return losses['total_loss']
     
@@ -205,6 +207,8 @@ class BetaVAE(pl.LightningModule):
         self.log('val_loss', losses['total_loss'], prog_bar = True)
         self.log('val_recon', losses['reconstruction_loss'])
         self.log('val_kl', losses['kl_loss'])
+        self.log('val_kl_per_dim', 
+                 losses['kl_loss'] / self.hparams.latent_dim)
 
     def test_step(self, batch, batch_idx):
         x = batch["methylation_data"]
@@ -231,12 +235,13 @@ class BetaVAE(pl.LightningModule):
 
         # Initialize the Cosine Annealing Scheduler
         cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max = 500 # constant from RNA-CDM
+            optimizer, T_max = self.trainer.estimated_stepping_batches
         )
 
         # Initialize the Warm-up Scheduler
+        warmup_steps = int(0.05 * self.trainer.estimated_stepping_batches)
         scheduler = GradualWarmupScheduler(
-            optimizer, multiplier = 1, total_epoch = 1000, 
+            optimizer, multiplier = 1, total_epoch = warmup_steps, 
             after_scheduler = cosine_scheduler
         )
 
@@ -244,7 +249,7 @@ class BetaVAE(pl.LightningModule):
             "optimizer": optimizer,
             "lr_scheduler": {
                 "scheduler": scheduler,
-                "interval": "epoch",
+                "interval": "step",
                 "monitor": "val_loss"
             }
         }

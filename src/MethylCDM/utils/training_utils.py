@@ -25,7 +25,7 @@ def configure_callbacks(trial = None, checkpoint_dir = None):
 
     # Model checkpoint to save the state of the optimal model
     checkpoint_path = os.path.join(
-        checkpoint_dir, "best-{epoch:02d}-{val_total_loss:.4f}"
+        checkpoint_dir, "best-{epoch:02d}-{val_loss:.4f}"
     )
     checkpoint_callback = ModelCheckpoint(
         monitor = "val_loss",
@@ -38,6 +38,7 @@ def configure_callbacks(trial = None, checkpoint_dir = None):
     early_stop_callback = EarlyStopping(
         monitor = 'val_loss',
         patience = 20,
+        min_delta = 1e-4,
         mode = 'min'
     )
 
@@ -58,13 +59,13 @@ def configure_callbacks(trial = None, checkpoint_dir = None):
     return callbacks
 
 
-def configure_loggers(trial = None):
+def configure_loggers(trial = None, study_name = None):
 
     if trial is not None:
 
         # Start a new run with this trial if in a sweep
         wandb.init(
-            project = "betaVAE",
+            project = study_name,
             name = f"trial_{trial.number}",
             reinit = True,
             config = trial.params
@@ -74,6 +75,7 @@ def configure_loggers(trial = None):
     else:
 
         # Else, start a regular run that isn't in a sweep
-        wandb_logger = WandbLogger(experiment = "betaVAE")
+        wandb_logger = WandbLogger(experiment = "betaVAE",
+                                   name = "single_run")
 
     return [wandb_logger]

@@ -1,0 +1,35 @@
+name: methylcdm-gpu
+channels:
+  - conda-forge
+  - defaults
+  - nvidia
+  - pytorch
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - pytorch
+  - pytorch-cuda=12.1
+  - pytorch-lightning>=2.6
+  - matplotlib
+  - seaborn
+  - h5py
+  - pyyaml
+  - optuna
+  - wandb
+  - pip
+  - pip:
+      - optuna-dashboard
+      - optuna-integration
+      - lightning
+      - lightning-utilities
+      - scanpy
+      - tqdm
+      - torchmetrics
+      - numba
+      - pyarrow
+      - umap-learn
+      - zarr
+      - warmup-scheduler

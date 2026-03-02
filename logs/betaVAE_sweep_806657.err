@@ -1,0 +1,689 @@
+srun: Job 806657 step creation temporarily disabled, retrying (Requested operation is presently disabled)
+srun: Step created for StepId=806657.0
+[I 2026-01-02 19:53:22,101] A new study created in RDB with name: betaVAE_sweep_20260102_195321
+wandb: Currently logged in as: sophiamjiali (sophiamjiali-university-of-toronto) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Using a boolean value for 'reinit' is deprecated. Use 'return_previous' or 'finish_previous' instead.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260102_195324-5l1mqr5b
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_0
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/5l1mqr5b
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (6) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 138 M  | train | 0    
+1 | z_mu     | Linear        | 23.3 K | train | 0    
+2 | z_logvar | Linear        | 23.3 K | train | 0    
+3 | decoder  | MethylDecoder | 138 M  | train | 0    
+-----------------------------------------------------------
+277 M     Trainable params
+0         Non-trainable params
+277 M     Total params
+1,108.888 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+`Trainer.fit` stopped: `max_epochs=100` reached.
+wandb: updating run metadata
+wandb: uploading history steps 121-123, summary, console lines 22-23
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇██
+wandb:             lr-Adam ██▇▇▆▅▄▃▂▂▁▁
+wandb:            train_kl █▂▃▂▂▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▃▂▂▁▁▁▁▁▁▁
+wandb:          train_loss █▅▄▃▂▁▁▁▁▁▁▁
+wandb:         train_recon █▇▄▄▃▁▂▂▁▁▁▁
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:              val_kl █▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▁▂█▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▁▂█▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 99
+wandb:             lr-Adam 2e-05
+wandb:            train_kl 0.03845
+wandb:    train_kl_per_dim 0.00025
+wandb:          train_loss 0.00927
+wandb:         train_recon 0.00739
+wandb: trainer/global_step 599
+wandb:              val_kl 0.01261
+wandb:      val_kl_per_dim 8e-05
+wandb:            val_loss 0.00841
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_0 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/5l1mqr5b
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260102_195324-5l1mqr5b/logs
+[I 2026-01-02 21:05:25,223] Trial 0 finished with value: 0.008412143215537071 and parameters: {'latent_dim': 152, 'beta': 0.04881754837118682, 'lr': 0.002279431893592722, 'batch_size': 256}. Best is trial 0 with value: 0.008412143215537071.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260102_210527-zue63alp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_1
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/zue63alp
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (11) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 138 M  | train | 0    
+1 | z_mu     | Linear        | 21.8 K | train | 0    
+2 | z_logvar | Linear        | 21.8 K | train | 0    
+3 | decoder  | MethylDecoder | 138 M  | train | 0    
+-----------------------------------------------------------
+277 M     Trainable params
+0         Non-trainable params
+277 M     Total params
+1,108.716 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▇▇▇▇▇▇███
+wandb:             lr-Adam ▇███▇▇▇▆▆▅▄▄▃▃▂▁▁
+wandb:            train_kl █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train_recon █▆▄▃▃▂▁▂▂▃▁▂▂▂▁▁▂
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▂▂▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:              val_kl ▁▁█▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▁█▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▂▁█▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 78
+wandb:             lr-Adam 6e-05
+wandb:            train_kl 0.27092
+wandb:    train_kl_per_dim 0.00184
+wandb:          train_loss 0.00687
+wandb:         train_recon 0.00637
+wandb: trainer/global_step 868
+wandb:              val_kl 0.22556
+wandb:      val_kl_per_dim 0.00153
+wandb:            val_loss 0.00679
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_1 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/zue63alp
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260102_210527-zue63alp/logs
+[I 2026-01-02 22:19:36,757] Trial 1 finished with value: 0.006785830482840538 and parameters: {'latent_dim': 147, 'beta': 0.001838658030231186, 'lr': 0.0003101030896925946, 'batch_size': 119}. Best is trial 1 with value: 0.006785830482840538.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260102_221938-kxniqb3u
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_2
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/kxniqb3u
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (7) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 119 K  | train | 0    
+2 | z_logvar | Linear        | 119 K  | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,115.835 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+wandb: updating run metadata
+wandb: 🚀 View run trial_2 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/kxniqb3u
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260102_221938-kxniqb3u/logs
+[I 2026-01-02 22:20:31,896] Trial 2 pruned. 
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260102_222033-pae09whp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_3
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/pae09whp
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (7) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 110 K  | train | 0    
+2 | z_logvar | Linear        | 110 K  | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,115.348 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+`Trainer.fit` stopped: `max_epochs=100` reached.
+wandb: updating run metadata
+wandb: uploading history steps 125-127, summary, console lines 23-24
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▃▃▃▃▃▃▃▃▃▄▄▅▅▅▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇▇██
+wandb:             lr-Adam ███▇▇▆▅▄▃▃▂▂▁▁
+wandb:            train_kl █▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train_recon █▄▄▂▃▂▃▂▂▂▂▂▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:              val_kl ▂▂█▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▂▂█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▂▃█▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 99
+wandb:             lr-Adam 0.0
+wandb:            train_kl 0.16242
+wandb:    train_kl_per_dim 0.00049
+wandb:          train_loss 0.00911
+wandb:         train_recon 0.0072
+wandb: trainer/global_step 699
+wandb:              val_kl 0.10258
+wandb:      val_kl_per_dim 0.00031
+wandb:            val_loss 0.00869
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_3 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/pae09whp
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260102_222033-pae09whp/logs
+[I 2026-01-02 23:44:23,192] Trial 3 finished with value: 0.008692791685461998 and parameters: {'latent_dim': 332, 'beta': 0.011744298459443197, 'lr': 0.00021457859809790396, 'batch_size': 203}. Best is trial 1 with value: 0.006785830482840538.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260102_234424-x1uks5w3
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_4
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/x1uks5w3
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (7) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 208 K  | train | 0    
+2 | z_logvar | Linear        | 208 K  | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+280 M     Trainable params
+0         Non-trainable params
+280 M     Total params
+1,120.101 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▇▇▇▇███
+wandb:             lr-Adam ██▇▇▆▅▄▃▂▁
+wandb:            train_kl ▆▃█▂▂▁▂▁▁▁
+wandb:    train_kl_per_dim ▆▃█▂▂▁▂▁▁▁
+wandb:          train_loss █▄█▄▃▁▂▁▁▁
+wandb:         train_recon █▅▇▄▂▂▂▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▄▅▅▅▆▆▆▆▆▆▆▆▇▇▇██
+wandb:              val_kl █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 77
+wandb:             lr-Adam 0.00131
+wandb:            train_kl 0.03746
+wandb:    train_kl_per_dim 8e-05
+wandb:          train_loss 0.00681
+wandb:         train_recon 0.00673
+wandb: trainer/global_step 545
+wandb:              val_kl 0.02722
+wandb:      val_kl_per_dim 6e-05
+wandb:            val_loss 0.00687
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_4 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/x1uks5w3
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260102_234424-x1uks5w3/logs
+[I 2026-01-03 00:45:31,031] Trial 4 finished with value: 0.006874112877994776 and parameters: {'latent_dim': 456, 'beta': 0.0021123512730589667, 'lr': 0.005093884013612399, 'batch_size': 213}. Best is trial 1 with value: 0.006785830482840538.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260103_004532-kaz4htge
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_5
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/kaz4htge
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (20) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 110 K  | train | 0    
+2 | z_logvar | Linear        | 110 K  | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,115.348 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: uploading history steps 145-145, summary, console lines 22-23
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▅▅▅▆▆▆▇▇▇███
+wandb:             lr-Adam ▄███████▇▇▇▇▇▆▆▆▅▅▅▅▄▄▄▃▃▃▂▂▂▁▁▁
+wandb:            train_kl █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▅▃▂▂▂▂▁▁▁▂▂▁▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train_recon ▆█▅▃▂▂▂▂▂▂▂▃▂▂▂▂▂▁▁▁▂▁▂▂▁▁▁▁▂▁▁▁
+wandb: trainer/global_step ▁▁▁▁▂▂▂▃▃▃▃▃▃▃▃▄▄▄▄▄▄▄▅▅▅▅▅▅▅▅▆▆▇▇▇▇▇▇██
+wandb:              val_kl █▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss █▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 81
+wandb:             lr-Adam 0.00037
+wandb:            train_kl 0.0085
+wandb:    train_kl_per_dim 3e-05
+wandb:          train_loss 0.00646
+wandb:         train_recon 0.0064
+wandb: trainer/global_step 1639
+wandb:              val_kl 0.00221
+wandb:      val_kl_per_dim 1e-05
+wandb:            val_loss 0.00669
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_5 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/kaz4htge
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260103_004532-kaz4htge/logs
+[I 2026-01-03 02:43:37,143] Trial 5 finished with value: 0.006694498471915722 and parameters: {'latent_dim': 332, 'beta': 0.007391042729571016, 'lr': 0.002477958442183352, 'batch_size': 65}. Best is trial 5 with value: 0.006694498471915722.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260103_024338-db9dvvtr
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_6
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/db9dvvtr
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (25) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 104 K  | train | 0    
+2 | z_logvar | Linear        | 104 K  | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,114.976 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▆▆▇▇▇▇██
+wandb:             lr-Adam ▃▆████████▇▇▇▇▇▇▆▆▆▆▆▅▅▅▅▄▄▄▄▃▃▃▃▂▂▂▂▁▁▁
+wandb:            train_kl █▂▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▃▃▂▂▂▂▁▂▁▂▂▁▁▁▂▂▁▂▂▁▁▂▂▂▂▁▂▁▁▁▁▁▁▂▁▁▂▁▁
+wandb:         train_recon █▅▅▄▄▃▃▂▃▂▁▄▂▁▂▂▂▂▃▃▂▁▂▃▂▃▂▃▂▂▂▁▁▁▃▂▂▃▂▁
+wandb: trainer/global_step ▁▁▁▁▁▂▂▂▂▂▂▂▂▃▃▃▄▄▄▄▄▄▄▅▅▅▅▅▅▅▆▆▆▇▇▇████
+wandb:              val_kl ██▄▆▄▃▄▄▂▇▃▄▄▂▃▃▁▂▂▅▃▂▂▂▃▂▂▁▃▂▁▂▁▃▃▂▃▃▁▂
+wandb:      val_kl_per_dim █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▂█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 79
+wandb:             lr-Adam 0.00021
+wandb:            train_kl 0.37891
+wandb:    train_kl_per_dim 0.00118
+wandb:          train_loss 0.00584
+wandb:         train_recon 0.00542
+wandb: trainer/global_step 1999
+wandb:              val_kl 0.37789
+wandb:      val_kl_per_dim 0.00117
+wandb:            val_loss 0.00633
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_6 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/db9dvvtr
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260103_024338-db9dvvtr/logs
+[I 2026-01-03 04:55:21,909] Trial 6 finished with value: 0.006325709633529186 and parameters: {'latent_dim': 322, 'beta': 0.0010944424731683155, 'lr': 0.0014280311169064628, 'batch_size': 52}. Best is trial 6 with value: 0.006325709633529186.
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260103_045523-084kznk5
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_7
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/084kznk5
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (8) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 74.8 K | train | 0    
+2 | z_logvar | Linear        | 74.8 K | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,113.174 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▂▂▂▃▃▃▃▄▄▅▅▅▅▆▆▆▇▇▇▇██
+wandb:             lr-Adam █▆▁
+wandb:            train_kl █▁▁
+wandb:    train_kl_per_dim █▁▁
+wandb:          train_loss █▁▁
+wandb:         train_recon █▁▁
+wandb: trainer/global_step ▁▁▂▂▂▃▃▃▃▃▄▄▅▅▅▅▅▆▆▆▇▇▇▇▇██
+wandb:              val_kl ▁▁▂▅█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▁▁▂▅█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▁▁▂▅█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 20
+wandb:             lr-Adam 0.00035
+wandb:            train_kl 0.31037
+wandb:    train_kl_per_dim 0.00114
+wandb:          train_loss 0.02374
+wandb:         train_recon 0.00942
+wandb: trainer/global_step 167
+wandb:              val_kl 0.12807
+wandb:      val_kl_per_dim 0.00047
+wandb:            val_loss 0.01478
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_7 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/084kznk5
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260103_045523-084kznk5/logs
+[I 2026-01-03 05:13:39,916] Trial 7 pruned. 
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260103_051341-h28yu1gn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_8
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/h28yu1gn
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (19) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 139 M  | train | 0    
+1 | z_mu     | Linear        | 93.9 K | train | 0    
+2 | z_logvar | Linear        | 93.9 K | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,114.383 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: uploading history steps 84-84, summary, console lines 22-23
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▁▁▂▂▂▂▂▂▂▃▃▃▄▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇▇█
+wandb:             lr-Adam ▁█████▇▇▇▆▆▆▅▅▄▄▃▃
+wandb:            train_kl █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▂▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train_recon █▆▄▄▄▃▄▃▂▂▃▂▂▁▂▂▁▁
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇████
+wandb:              val_kl ▂█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim ▂█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss ▂█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 48
+wandb:             lr-Adam 0.00082
+wandb:            train_kl 0.03459
+wandb:    train_kl_per_dim 0.00011
+wandb:          train_loss 0.00698
+wandb:         train_recon 0.00678
+wandb: trainer/global_step 930
+wandb:              val_kl 0.02079
+wandb:      val_kl_per_dim 7e-05
+wandb:            val_loss 0.00721
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_8 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/h28yu1gn
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260103_051341-h28yu1gn/logs
+[I 2026-01-03 06:28:39,990] Trial 8 pruned. 
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /ddn_exa/campbell/sli/methylcdm-project/wandb/run-20260103_062841-iq6vnird
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run trial_9
+wandb: ⭐️ View project at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: 🚀 View run at https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/iq6vnird
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+Loading `train_dataloader` to estimate number of stepping batches.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/utils/data/dataloader.py:627: UserWarning: This DataLoader will create 4 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py:317: The number of training batches (11) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+  | Name     | Type          | Params | Mode  | FLOPs
+-----------------------------------------------------------
+0 | encoder  | MethylEncoder | 138 M  | train | 0    
+1 | z_mu     | Linear        | 65.8 K | train | 0    
+2 | z_logvar | Linear        | 65.8 K | train | 0    
+3 | decoder  | MethylDecoder | 139 M  | train | 0    
+-----------------------------------------------------------
+278 M     Trainable params
+0         Non-trainable params
+278 M     Total params
+1,112.557 Total estimated model params size (MB)
+31        Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+SLURM auto-requeueing enabled. Setting signal handlers.
+/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/torch/optim/lr_scheduler.py:1090: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  _warn_get_lr_called_within_step(self)
+wandb: updating run metadata
+wandb: uploading summary, console lines 22-22
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇██
+wandb:             lr-Adam ▆██▇▇▆▆▅▄▃▂▁
+wandb:            train_kl █▂▁▁▁▁▁▁▁▁▁▁
+wandb:    train_kl_per_dim █▂▁▁▁▁▁▁▁▁▁▁
+wandb:          train_loss █▂▁▁▁▁▁▁▁▁▁▁
+wandb:         train_recon █▃▁▁▁▁▁▁▁▁▁▁
+wandb: trainer/global_step ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▆▆▇▇▇▇███
+wandb:              val_kl █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      val_kl_per_dim █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            val_loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                  +1 ...
+wandb: 
+wandb: Run summary:
+wandb:               epoch 54
+wandb:             lr-Adam 0.00483
+wandb:            train_kl 0.00451
+wandb:    train_kl_per_dim 2e-05
+wandb:          train_loss 0.00714
+wandb:         train_recon 0.00669
+wandb: trainer/global_step 604
+wandb:              val_kl 0.00191
+wandb:      val_kl_per_dim 1e-05
+wandb:            val_loss 0.0068
+wandb:                  +1 ...
+wandb: 
+wandb: 🚀 View run trial_9 at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321/runs/iq6vnird
+wandb: ⭐️ View project at: https://wandb.ai/sophiamjiali-university-of-toronto/betaVAE_sweep_20260102_195321
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260103_062841-iq6vnird/logs
+Traceback (most recent call last):
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1145, in _commit_impl
+    self.engine.dialect.do_commit(self.connection)
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 715, in do_commit
+    dbapi_connection.commit()
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/storages/_rdb/storage.py", line 80, in _create_scoped_session
+    session.commit()
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/orm/state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 1318, in commit
+    trans.commit()
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2640, in commit
+    self._do_commit()
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2745, in _do_commit
+    self._connection_commit_impl()
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2716, in _connection_commit_impl
+    self.connection._commit_impl()
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1147, in _commit_impl
+    self._handle_dbapi_exception(e, None, None, None, None)
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2363, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1145, in _commit_impl
+    self.engine.dialect.do_commit(self.connection)
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 715, in do_commit
+    dbapi_connection.commit()
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/_optimize.py", line 217, in _run_trial
+    updated_state, values, warning_message = _tell_with_warning(
+                                             ^^^^^^^^^^^^^^^^^^^
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/_tell.py", line 175, in _tell_with_warning
+    study._storage.set_trial_state_values(frozen_trial._trial_id, state, values)
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/storages/_cached_storage.py", line 185, in set_trial_state_values
+    return self._backend.set_trial_state_values(trial_id, state=state, values=values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/storages/_rdb/storage.py", line 624, in set_trial_state_values
+    with _create_scoped_session(self.scoped_session) as session:
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/storages/_rdb/storage.py", line 97, in _create_scoped_session
+    raise optuna.exceptions.StorageInternalError(message) from e
+optuna.exceptions.StorageInternalError: An exception is raised during the commit. This typically happens due to invalid data in the commit, e.g. exceeding max length. 
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ddn_exa/campbell/sli/methylcdm-project/scripts/train_betaVAE.py", line 95, in <module>
+    main()
+  File "/ddn_exa/campbell/sli/methylcdm-project/scripts/train_betaVAE.py", line 69, in main
+    study.optimize(lambda trial: objective(trial, study_name, train_cfg),
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/study.py", line 490, in optimize
+    _optimize(
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/_optimize.py", line 67, in _optimize
+    _optimize_sequential(
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/_optimize.py", line 164, in _optimize_sequential
+    frozen_trial_id = _run_trial(study, func, catch)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/campbell/sophiali/miniforge3/envs/methylcdm-gpu/lib/python3.11/site-packages/optuna/study/_optimize.py", line 255, in _run_trial
+    assert False, "Should not reach."
+           ^^^^^
+AssertionError: Should not reach.
+srun: error: gpu2: task 0: Exited with exit code 1
