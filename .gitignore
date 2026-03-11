@@ -1,6 +1,5 @@
 # all data files
 data/
-resources/
 tools/
 wandb/
 models/
