@@ -26,13 +26,13 @@ test_adata_path: "data/training/methylation/pancancer_test_adata.h5ad"
 # -----| Fixed Parameters |----------------------------------------------------
 
 # Input AnnData object dimension (number of genes)
-input_dim: 211580
+input_dim: 211572
 
 # Device parameters
 num_workers: 2
 
 # Max training epochs
-max_epochs: 200
+max_epochs: 300
 
 # Hyperparameter sweep ranges
 batch_size: [32, 256]
@@ -47,9 +47,9 @@ encoder_dims:
   - [1024, 256, 128]
   - [2048, 1024, 256, 128]
 
-latent_dim: [64, 256]
-beta: [0.001, 0.01]
+latent_dim: [64, 128]
+beta: [0.001, 0.003]
 input_dropout: [0.1, 0.3]
-num_cycles: [2, 4]
-lr: [0.0001, 0.01]
-batch_size: [64, 128, 256]
+num_cycles: [2]
+lr: [0.0001, 0.002]
+batch_size: [64, 128]

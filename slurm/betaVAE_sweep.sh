@@ -31,7 +31,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --nodelist=gpu2,gpu3                 # gpu1 may have insufficient VRAM
-#SBATCH --array=0-49%2                       # 50 trials, only 2 at the same time
+#SBATCH --array=0-74%2                       # 75 trials, only 2 at the same time
                                              # Resubmit to add more — Optuna will resume.
 
 # ==============================================================================
