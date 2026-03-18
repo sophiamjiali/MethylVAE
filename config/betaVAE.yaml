@@ -26,7 +26,7 @@ test_adata_path: "data/training/methylation/pancancer_test_adata.h5ad"
 # -----| Fixed Parameters |----------------------------------------------------
 
 # Input AnnData object dimension (number of genes)
-input_dim: 211572
+input_dim: 225410
 
 # Device parameters
 num_workers: 2
