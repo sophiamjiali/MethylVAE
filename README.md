@@ -1,6 +1,8 @@
 # MethylCDM
 Generative Modeling of Tumour Histology from Differential Methylation
 
+To run a sweep: `sbatch slurm/betaVAE_sweep.sh`
+
 # Repository Structure
 
 ```
