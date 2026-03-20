@@ -6,6 +6,9 @@ models/
 logs/
 experiments/
 
+# Evaluation artifacts
+src/MethylCDM/evaluation/*.npy
+
 # macOS
 .DS_Store
 ._*
