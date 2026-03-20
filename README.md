@@ -3,6 +3,15 @@ Generative Modeling of Tumour Histology from Differential Methylation
 
 To run a sweep: `sbatch slurm/betaVAE_sweep.sh`
 
+To evaluate a sweep: 
+```
+python scripts/sweep_betaVAE.py
+--config_pipeline pipeline.yaml \
+--config_train betaVAE.yaml \
+--study_name betaVAE_sweep_20260318_141012
+--report_only
+```
+
 # Repository Structure
 
 ```
