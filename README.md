@@ -1,52 +1,113 @@
 # MethylVAE
-Generative Modeling of Tumour Histology from Differential Methylation.
 
-To run a sweep: `sbatch slurm/betaVAE_sweep.sh`
+> **Component 1 of:** *Generative Modeling of Tumour Histology from Differential Methylation*
 
-To evaluate a sweep: 
-```
-python scripts/sweep_betaVAE.py
---config_pipeline pipeline.yaml \
---config_train betaVAE.yaml \
---study_name betaVAE_sweep_20260318_141012
---report_only
-```
+MethylVAE is a β-variational autoencoder (β-VAE) that learns a compact latent representation of DNA methylation profiles. It serves as the upstream model in a two-stage generative pipeline: the learned latent embeddings are subsequently consumed by a downstream conditional diffusion model (CDM) to synthesise tumour histology images.
 
-# Repository Structure
+---
 
-```
-MethylCDM/
-├── config/             # Pipeline Configuration Files
-├── data/               # Input & Output Data
-├── experiments/        # Training Logs, Metrics, & Figures
-├── models/             # Model Checkpoints
-├── notebooks/          # Exploratory Notebooks for Development
-├── scripts/            # Pipeline Entry-points
-├── src/                # Core Reusable Modules
-└── workflow/           # SnakeMake Pipeline Orchestration
-```
+## Overview
 
-## Scripts
-The `scripts` folder holds the entry-points to the pipeline, using the logic defined in the `src` folder. Shell wrappers exist to run the pipeline for cluster/HPC.
-```
-└── script/
-    ├── preprocess_methylation.py   # Preprocess methylation data
-    ├── preprocess_wsi.py           # Preprocess WSI data
-    ├── train_beta_vae.py           # Train β-VAE 
-    ├── train_diffusion.py          # Train CDM
-    ├── eval_beta_vae.py            # Evaluate β-VAE
-    ├── eval_diffusion.py           # Evaluate CDM
-```
+DNA methylation is a stable epigenetic mark that varies systematically across cancer types and tumour microenvironments. MethylVAE encodes high-dimensional methylation arrays into a low-dimensional continuous latent space, disentangling biologically meaningful axes of variation via the β penalty on the KL divergence term of the ELBO. The resulting embeddings provide structured, smooth conditioning signals for downstream generative modelling of whole-slide image (WSI) patches.
 
-## SRC
-The `src` folder holds the core logic and main stateless implementation of the workflow. The functions defined are used in the `scripts` folder to run the full pipeline.
-```
-└── src/
-    ├── data/               # Dataset & Loader Logic
-    ├── preprocessing/      # Methylation & WSI Preprocessing Logic
-    ├── models/             # Model Definitions
-    ├── training/           # Training Logic
-    ├── evaluation/         # Evaluation Logic
-    └── utils/              # General Utilities
+---
+
+## Repository Structure
 
 ```
+MethylVAE/
+├── config/             # YAML configuration files (pipeline & model hyperparameters)
+├── devnotes/           # Development notes & experiment logs
+├── notebooks/          # Exploratory Jupyter notebooks
+├── plots/              # Evaluation figures (reconstruction quality, latent space)
+├── resources/          # Reference materials
+├── scripts/            # Pipeline entry-points
+├── slurm/              # SLURM batch scripts for HPC execution
+├── src/
+│   └── MethylCDM/      # Core source modules
+├── environment.yaml        # CPU conda environment
+├── environment_gpu.yaml    # GPU conda environment (CUDA 12.1)
+└── pyproject.toml          # Package metadata
+```
+
+### Scripts
+
+| Script | Description |
+|--------|-------------|
+| `scripts/train_betaVAE.py` | Train the β-VAE |
+| `scripts/eval_betaVAE.py` | Evaluate a trained β-VAE checkpoint |
+| `scripts/sweep_betaVAE.py` | Run / report an Optuna hyperparameter sweep |
+
+---
+
+## Installation
+
+**GPU environment (recommended):**
+```bash
+conda env create -f environment_gpu.yaml
+conda activate methylcdm-env
+pip install -e .
+```
+
+**CPU environment:**
+```bash
+conda env create -f environment.yaml
+conda activate methylcdm-env
+pip install -e .
+```
+
+Key dependencies: Python 3.11, PyTorch, PyTorch Lightning ≥ 2.6, Optuna, Weights & Biases, scikit-learn, h5py.
+
+---
+
+## Usage
+
+### Training
+
+```bash
+python scripts/train_betaVAE.py \
+  --config_pipeline config/pipeline.yaml \
+  --config_train config/betaVAE.yaml
+```
+
+### Evaluation
+
+```bash
+python scripts/eval_betaVAE.py \
+  --config_pipeline config/pipeline.yaml \
+  --config_train config/betaVAE.yaml
+```
+
+### Hyperparameter Sweep (SLURM)
+
+Launch a sweep on a SLURM cluster:
+
+```bash
+sbatch slurm/betaVAE_sweep.sh
+```
+
+Report results from a completed sweep:
+
+```bash
+python scripts/sweep_betaVAE.py \
+  --config_pipeline config/pipeline.yaml \
+  --config_train config/betaVAE.yaml \
+  --study_name <study_name> \
+  --report_only
+```
+
+---
+
+## Configuration
+
+Model and pipeline behaviour is controlled via YAML files in `config/`. Key parameters include the β coefficient (KL weight), latent dimensionality, encoder/decoder architecture, learning rate, and batch size. Refer to the files in `config/` for full documentation of available options.
+
+---
+
+## Pipeline Context
+
+```
+Methylation array  ──►  MethylVAE (this repo)  ──►  latent z  ──►  CDM  ──►  WSI patch
+```
+
+MethylVAE is **Component 1** of the pipeline. The downstream conditional diffusion model (Component 2) conditions image generation on the latent codes produced here.
