@@ -123,6 +123,7 @@ def get_or_create_study_name(experiment_dir: str) -> str:
 # ==============================================================================
 
 def print_report(study: optuna.Study) -> None:
+    
     completed = [t for t in study.trials
                  if t.state == optuna.trial.TrialState.COMPLETE]
     pruned    = [t for t in study.trials
