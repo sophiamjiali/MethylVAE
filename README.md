@@ -66,16 +66,16 @@ Key dependencies: Python 3.11, PyTorch, PyTorch Lightning ≥ 2.6, Optuna, Weigh
 
 ```bash
 python scripts/train_betaVAE.py \
-  --config_pipeline config/pipeline.yaml \
-  --config_train config/betaVAE.yaml
+  --config_pipeline pipeline.yaml \
+  --config_train betaVAE.yaml
 ```
 
 ### Evaluation
 
 ```bash
 python scripts/eval_betaVAE.py \
-  --config_pipeline config/pipeline.yaml \
-  --config_train config/betaVAE.yaml
+  --config_pipeline pipeline.yaml \
+  --config_train betaVAE.yaml
 ```
 
 ### Hyperparameter Sweep (SLURM)
