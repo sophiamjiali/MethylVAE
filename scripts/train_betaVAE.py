@@ -1,95 +1,84 @@
 #!/usr/bin/env python3
 # ==============================================================================
 # Script:           train_betaVAE.py
-# Purpose:          Entry-point to train a betaVAE using a pancancer dataset
+# Purpose:          Entry-point for a single BetaVAE training run.
+#                   Trains the model using fixed parameters from betaVAE.yaml.
 # Author:           Sophia Li
 # Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
-# Date:             12/31/2025
 #
-# Configurations:   betaVAE.yaml
-#
-# Notes:            Begins an Optuna hyperparameter sweep
+# Usage:
+#   python scripts/train_betaVAE.py \
+#       --config_pipeline pipeline.yaml \
+#       --config_train    betaVAE_train.yaml \
+#       --seed            42 \
+#       --verbose         True
 # ==============================================================================
 
+import argparse
 from datetime import datetime
 from pathlib import Path
-import os
-import optuna
-from optuna.samplers import TPESampler
-from optuna.pruners import MedianPruner
-import argparse
 
 from MethylCDM.utils.utils import init_environment, load_config, resolve_path
-from MethylCDM.training.betaVAE_objective import objective
-from MethylCDM.constants import BETAVAE_SWEEP_DIR
+from MethylCDM.training.train import run_training
+from MethylCDM.constants import BETAVAE_CHECKPOINT_DIR
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Single training run for BetaVAE."
+    )
+    parser.add_argument(
+        "--config_pipeline", type=str, required=True,
+        help="Path to pipeline.yaml."
+    )
+    parser.add_argument(
+        "--config_train", type=str, required=True,
+        help="Path to betaVAE.yaml."
+    )
+    parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Random seed for reproducibility."
+    )
+    parser.add_argument(
+        "--verbose", type=bool, default=True,
+        help="Print training progress."
+    )
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
 
-    # -----| Environment Initialization |-----
-
-    # Parse the arguments provided to the entry-point script
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config_pipeline", type = str, required = True)
-    parser.add_argument("--config_train", type = str, required = True)
-    parser.add_argument("--verbose", type = bool, default = False)
-    args = parser.parse_args()
-
-    if args.verbose:
-        print("=" * 50)
-        print(f"~~~~~| Beginning BetaVAE Hyperparameter Sweep")
-        print("=" * 50)
-        print("\n")
-
-    # Load the relevant configuration files 
+    # Load configs
     pipeline_cfg = load_config(args.config_pipeline)
-    train_cfg = load_config(args.config_train)
+    train_cfg    = load_config(args.config_train)
 
-    # Initialize the environment for reproducible analysis
+    # Initialise environment
     init_environment(pipeline_cfg)
 
-    # -----| Sweep Initialization |-----
+    # Generate a unique run name
+    run_name = f"betaVAE_train_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-    # Define the Optuna Sweep Study
-    experiment_dir = train_cfg.get('experiment_dir', '')
-    experiment_dir = resolve_path(experiment_dir, BETAVAE_SWEEP_DIR)
-    Path(experiment_dir).mkdir(parents = True, exist_ok = True)
-    db_path = os.path.join(experiment_dir, "betaVAE_hyperparam_sweep")
-    experiment_storage = "sqlite:///{}.db".format(db_path)
+    if args.verbose:
+        print("=" * 60)
+        print(f"~~~~~| BetaVAE Single Training Run")
+        print("=" * 60)
+        print(f"  Run Name:  {run_name}")
+        print(f"  Seed:      {args.seed}")
+        print(f"  Max Epochs: {train_cfg.get('max_epochs', 'N/A')}")
+        print("-" * 60)
 
-    study_name = f"betaVAE_sweep_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    study = optuna.create_study(
-        storage = experiment_storage,
-        study_name = study_name,
-        direction = "minimize",
-        sampler = TPESampler(),
-        pruner = MedianPruner(n_warmup_steps = 20, n_startup_trials = 5)
+    # Execute the training
+    # Note: We pass the seed explicitly to override any trial-based logic
+    val_loss = run_training(
+        config=train_cfg, 
+        run_name=run_name, 
+        seed=args.seed
     )
 
-    # Perform the sweep
-    study.optimize(lambda trial: objective(trial, study_name, train_cfg), 
-                   timeout = 86400, n_trials = 100)
-
-    # Display the results
     if args.verbose:
-        print("=" * 50)
-        print(f"Hyperparameter Sweep Results")
-        print("=" * 50)
-        print("\n")
-    
-        print("Number of finished trials: ", len(study.trials))
-        print("Best trial:")
-        best_trial = study.best_trial
-        print("  Value: ", best_trial.value)
-        print("  Params: ")
-        for key, value in best_trial.params.items():
-            print(f"    {key}: {value}")
-
-    if args.verbose:
-        print("\n")
-        print("=" * 50)
-        print(f"~~~~~| Completed BetaVAE Hyperparameter Sweep")
-        print("=" * 50)
-
+        print("-" * 60)
+        print(f"  Training Completed.")
+        print(f"  Final Validation Loss: {val_loss:.5f}" if val_loss else "  Final Loss: N/A")
+        print("=" * 60)
 
 if __name__ == "__main__":
     main()

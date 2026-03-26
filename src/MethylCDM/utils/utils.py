@@ -50,7 +50,7 @@ def resolve_path(path_str, default_path, build_path = False):
     elif build_path:
         return (default_path / path_str).resolve()
     else:
-        return default_path.resolve()
+        return default_path
 
 
 def build_meta_fields(fields):
