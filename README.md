@@ -90,8 +90,8 @@ Report results from a completed sweep:
 
 ```bash
 python scripts/sweep_betaVAE.py \
-  --config_pipeline config/pipeline.yaml \
-  --config_train config/betaVAE.yaml \
+  --config_pipeline pipeline.yaml \
+  --config_train betaVAE.yaml \
   --study_name <study_name> \
   --report_only
 ```
