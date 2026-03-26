@@ -64,10 +64,18 @@ Key dependencies: Python 3.11, PyTorch, PyTorch Lightning ≥ 2.6, Optuna, Weigh
 
 ### Training
 
+To train a single iteration of the model using constant hyperparameters (as defined in betaVAE_train_config.yaml).
+
 ```bash
-python scripts/train_betaVAE.py \
+python scripts/betaVAE_train.py \
   --config_pipeline pipeline.yaml \
-  --config_train betaVAE.yaml
+  --config_train betaVAE_train.yaml \
+  --seed 42 \
+  --verbose True
+```
+
+```bash
+sbatch slurm/betaVAE_train.sh
 ```
 
 ### Evaluation
