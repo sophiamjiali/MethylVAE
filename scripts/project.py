@@ -127,7 +127,7 @@ def main():
             # Generate embeddings for the given project
             mask = (adata.obs['project_id'] == project_id)
             proj_subset = adata[mask].copy()
-            latent_proj = create_latent_adata(proj_subset, embeddings[mask.values], 
+            latent_proj = create_latent_adata(proj_subset, embeddings[gimask.values], 
                                               checkpoint_name)
             
             save_path = project_dir / f"{project_id}_embeddings.h5ad"
