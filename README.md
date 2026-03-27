@@ -78,14 +78,6 @@ python scripts/train.py \
 sbatch slurm/train.sh
 ```
 
-### Evaluation
-
-```bash
-python scripts/eval_betaVAE.py \
-  --config_pipeline pipeline.yaml \
-  --config_train betaVAE.yaml
-```
-
 ### Hyperparameter Sweep (SLURM)
 
 Launch a sweep on a SLURM cluster:
@@ -102,6 +94,32 @@ python scripts/sweep.py \
   --config_train betaVAE.yaml \
   --study_name <study_name> \
   --report_only
+```
+
+### Evaluation
+
+```bash
+python scripts/eval_betaVAE.py \
+  --config_pipeline pipeline.yaml \
+  --config_train betaVAE.yaml
+```
+
+### Projection
+
+To generate embeddings.
+
+```bash
+sbatch slurm/project.sh
+```
+
+```bash
+python scripts/project.py \
+> --checkpoint <path-to-checkpoint> \
+> --data_path <path-to-h5ad> \
+> --output_dir <path-to-output-dir> \
+> --batch_size 512 \
+> --name pancancer \
+> --split_projects
 ```
 
 ---
