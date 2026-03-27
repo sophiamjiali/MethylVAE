@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# Script:           sweep_betaVAE.sh
+# Script:           sweep.sh
 # Purpose:          SLURM job array for BetaVAE Optuna hyperparameter sweep.
 #                   Each array task runs one Optuna trial independently on its
 #                   own GPU. All tasks share a single SQLite Optuna storage
@@ -17,15 +17,15 @@
 #   new task a trial not yet run.
 #
 # To monitor progress from the login node:
-#   python scripts/sweep_betaVAE.py \
+#   python scripts/sweep.py \
 #       --config_pipeline pipeline.yaml \
 #       --config_train betaVAE.yaml \
 #       --report_only
 # ==============================================================================
 
-#SBATCH --job-name=betaVAE_sweep
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/betaVAE_sweep_%A_%a.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/betaVAE_sweep_%A_%a.err
+#SBATCH --job-name=sweep
+#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/betaVAE_sweep_%A_%a.out
+#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/betaVAE_sweep_%A_%a.err
 #SBATCH --time=24:30:00
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
@@ -80,7 +80,7 @@ export SLURM_NTASKS_PER_NODE=1
 # reproducibility without all trials being identically seeded.
 # ==============================================================================
 
-srun python scripts/sweep_betaVAE.py \
+srun python scripts/sweep.py \
     --config_pipeline pipeline.yaml \
     --config_train    betaVAE.yaml \
     --trial_seed      $SLURM_ARRAY_TASK_ID \

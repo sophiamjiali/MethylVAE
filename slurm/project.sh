@@ -1,25 +1,25 @@
 #!/bin/bash
 # ==============================================================================
-# Script:           train_betaVAE.sh
-# Purpose:          SLURM submission script for a single BetaVAE training run.
-#                   Uses fixed parameters defined in betaVAE_train.yaml.
+# Script:           project.sh
+# Purpose:          SLURM script to generate Beta-VAE embeddings (latent-only).
+#                   Outputs lightweight .h5ad files preserving obs and uns.
 # Author:           Sophia Li
 # Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
 #
 # Usage:
-#   sbatch slurm/betaVAE_train.sh
+#   sbatch scripts/project_betaVAE.sh
 # ==============================================================================
 
-#SBATCH --job-name=betaVAE_train
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/betaVAE_train_%j.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/betaVAE_train_%j.err
-#SBATCH --time=24:00:00
+#SBATCH --job-name=project
+#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/project/project_%j.out
+#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/project/project_%j.err
+#SBATCH --time=04:00:00
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
-#SBATCH --nodelist=gpu2
-#SBATCH --ntasks=1
 #SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --nodelist=gpu2
 
 # ==============================================================================
 # Environment Setup
@@ -32,8 +32,7 @@ cd /ddn_exa/campbell/sli/methylcdm-project
 
 mkdir -p logs
 
-# Clean up SLURM variables that can confuse PyTorch Lightning's 
-# internal ClusterEnvironment detection.
+# Clean up SLURM variables that can confuse PyTorch Lightning detection
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
 
@@ -47,24 +46,23 @@ echo "=========================================="
 nvidia-smi
 
 # ==============================================================================
-# Weights & Biases (W&B)
-# ==============================================================================
-
-export WANDB_PROJECT="MethylCDM-BetaVAE-Final"
-# export WANDB_MODE=offline # Uncomment if nodes lack internet
-
-# ==============================================================================
 # Execution
 # ==============================================================================
 
-# We use a fixed seed (42) for the final run to ensure reproducibility.
-# We call the new train_betaVAE.py script instead of the sweep script.
+# Define your paths here for easy swapping
+CHECKPOINT="/ddn_exa/campbell/sli/methylcdm-project/models/beta_vae/betaVAE_sweep_20260306_133219/trial_72/best-epoch=151-val_loss=1.3515.ckpt"
+DATA="/ddn_exa/campbell/sli/methylcdm-project/data/training/methylation/pancancer_cohort_adata.h5ad"
+OUT_DIR="/ddn_exa/campbell/sli/methylcdm-project/data/embeddings"
 
-srun python scripts/train_betaVAE.py \
-    --config_pipeline pipeline.yaml \
-    --config_train    betaVAE_train.yaml \
-    --seed            42 \
-    --verbose         True
+# Run projection
+# Toggle --split_projects if you want individual TCGA project files
+srun python scripts/project.py \
+    --checkpoint "$CHECKPOINT" \
+    --data_path "$DATA" \
+    --output_dir "$OUT_DIR" \
+    --batch_size 512 \
+    --name "pancancer_latent" \
+    --device cuda
 
 echo "=========================================="
 echo "End time: $(date)"
