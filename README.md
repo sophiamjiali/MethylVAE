@@ -112,6 +112,16 @@ To generate embeddings.
 sbatch slurm/project.sh
 ```
 
+```bash
+python scripts/project.py \
+> --checkpoint <path-to-checkpoint> \
+> --data_path <path-to-h5ad> \
+> --out_dir <path-to-output-dir> \
+> --batch_size 512 \
+> --name pancancer \
+> --split_projects
+```
+
 ---
 
 ## Configuration
