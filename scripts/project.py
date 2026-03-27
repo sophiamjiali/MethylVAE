@@ -11,6 +11,7 @@
 #       --data_path <path_to_anndata>
 # ==============================================================================
 
+import os
 import argparse
 import sys
 from pathlib import Path
@@ -115,23 +116,26 @@ def main():
 
     if args.split_projects:
         print("Splitting latent objects by project_id...")
-        unique_projects = adata.obs['project_id'].unique()
+
+        # Create a sub-directory in the output direct with the specified name
+        project_dir = os.path.join(args.output_dir, args.name)
+        project_dir.mkdir(parents=True, exist_ok=True)
         
-        for proj in unique_projects:
-            mask = (adata.obs['project_id'] == proj)
-            # Slice the original adata to preserve obs and uns for this specific project
-            # Using adata[mask] ensures that uns is carried over correctly for the slice
+        unique_projects = adata.obs['project_id'].unique()
+        for project_id in unique_projects:
+
+            # Generate embeddings for the given project
+            mask = (adata.obs['project_id'] == project_id)
             proj_subset = adata[mask].copy()
+            latent_proj = create_latent_adata(proj_subset, embeddings[mask.values], 
+                                              checkpoint_name)
             
-            # Extract only the needed components for the latent object
-            latent_proj = create_latent_adata(proj_subset, embeddings[mask.values], checkpoint_name)
-            
-            save_path = output_base / f"{proj}_embeddings.h5ad"
+            save_path = project_dir / f"{project_id}_embeddings.h5ad"
             latent_proj.write_h5ad(save_path)
             print(f" Saved: {save_path} | Samples: {latent_proj.n_obs}")
             
     else:
-        # Save full cohort
+        # Save the full cohort as a single AnnData object
         full_latent = create_latent_adata(adata, embeddings, checkpoint_name)
         save_path = output_base / f"{args.name}_embeddings.h5ad"
         

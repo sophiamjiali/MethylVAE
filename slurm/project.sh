@@ -1,5 +1,5 @@
 #!/bin/bash
-# ==============================================================================
+# =============================================================================
 # Script:           project.sh
 # Purpose:          SLURM script to generate Beta-VAE embeddings (latent-only).
 #                   Outputs lightweight .h5ad files preserving obs and uns.
@@ -8,7 +8,7 @@
 #
 # Usage:
 #   sbatch scripts/project_betaVAE.sh
-# ==============================================================================
+# =============================================================================
 
 #SBATCH --job-name=project
 #SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/project/project_%j.out
@@ -21,9 +21,9 @@
 #SBATCH --ntasks=1
 #SBATCH --nodelist=gpu2
 
-# ==============================================================================
+# =============================================================================
 # Environment Setup
-# ==============================================================================
+# =============================================================================
 
 source ~/miniforge3/etc/profile.d/conda.sh
 conda activate methylcdm-env
