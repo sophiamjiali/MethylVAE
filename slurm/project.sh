@@ -50,7 +50,7 @@ nvidia-smi
 # ==============================================================================
 
 # Define your paths here for easy swapping
-CHECKPOINT="/ddn_exa/campbell/sli/methylcdm-project/models/beta_vae/betaVAE_sweep_20260306_133219/trial_72/best-epoch=151-val_loss=1.3515.ckpt"
+CHECKPOINT="/ddn_exa/campbell/sli/methylcdm-project/betaVAE_train_20260326_175018/best-epoch=152-val_loss=1.5184.ckpt"
 DATA="/ddn_exa/campbell/sli/methylcdm-project/data/training/methylation/pancancer_cohort_adata.h5ad"
 OUT_DIR="/ddn_exa/campbell/sli/methylcdm-project/data/embeddings"
 
@@ -61,8 +61,9 @@ srun python scripts/project.py \
     --data_path "$DATA" \
     --output_dir "$OUT_DIR" \
     --batch_size 512 \
-    --name "pancancer_latent" \
-    --device cuda
+    --name "pancancer" \
+    --device cuda \
+    --split_projects
 
 echo "=========================================="
 echo "End time: $(date)"

@@ -118,7 +118,7 @@ def main():
         print("Splitting latent objects by project_id...")
 
         # Create a sub-directory in the output direct with the specified name
-        project_dir = os.path.join(args.output_dir, args.name)
+        project_dir = Path(args.output_dir) / Path(args.name)
         project_dir.mkdir(parents=True, exist_ok=True)
         
         unique_projects = adata.obs['project_id'].unique()
@@ -127,7 +127,7 @@ def main():
             # Generate embeddings for the given project
             mask = (adata.obs['project_id'] == project_id)
             proj_subset = adata[mask].copy()
-            latent_proj = create_latent_adata(proj_subset, embeddings[gimask.values], 
+            latent_proj = create_latent_adata(proj_subset, embeddings[mask.values], 
                                               checkpoint_name)
             
             save_path = project_dir / f"{project_id}_embeddings.h5ad"
@@ -142,7 +142,7 @@ def main():
         full_latent.write_h5ad(save_path)
         print(f"Saved full latent-only AnnData: {save_path}")
 
-    print("~~~~~| Finished generating embeddings |~~~~~")g
+    print("~~~~~| Finished generating embeddings |~~~~~")
 
 
 def generate_embeddings(model, sample_tensor):
