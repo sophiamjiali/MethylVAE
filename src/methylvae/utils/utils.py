@@ -17,7 +17,7 @@ import yaml
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 
-from MethylCDM.constants import (
+from MethylVAE.constants import (
     CONFIG_DIR,
     ANNOTATION_27K,
     ANNOTATION_450K,

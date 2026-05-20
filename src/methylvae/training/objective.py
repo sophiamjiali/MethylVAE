@@ -18,11 +18,11 @@ import wandb
 import pytorch_lightning as pl
 from pathlib import Path
 
-from MethylCDM.utils.utils import resolve_path
-from MethylCDM.models.betaVAE import BetaVAE
+from MethylVAE.utils.utils import resolve_path
+from MethylVAE.models.betaVAE import BetaVAE
 from MethylCDM.data.methylation_datamodule import MethylDataModule
-from MethylCDM.constants import BETAVAE_CHECKPOINT_DIR
-from MethylCDM.utils.training_utils import (
+from MethylVAE.constants import BETAVAE_CHECKPOINT_DIR
+from MethylVAE.utils.training_utils import (
     configure_callbacks, 
     configure_loggers
 )

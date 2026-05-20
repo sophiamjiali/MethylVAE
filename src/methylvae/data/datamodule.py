@@ -1,0 +1,72 @@
+# ==============================================================================
+# Script:           methylation_datamodule.py
+# Purpose:          Methylation DataModule and Dataset for PyTorch Lightning
+# Author:           Sophia Li
+# Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
+# Date:             12/31/2025
+# ==============================================================================
+
+import torch
+import anndata as ad
+import lightning.pytorch as pl
+from torch.utils.data import DataLoader, Dataset
+
+class MethylDataModule(pl.LightningDataModule):
+    def __init__(self,
+                 train_adata_path: str,
+                 val_adata_path: str,
+                 test_adata_path: str, 
+                 batch_size: int = 128,
+                 num_workers: int = 2):
+        super().__init__()
+        
+        self.train_adata_path = train_adata_path
+        self.val_adata_path = val_adata_path
+        self.test_adata_path = test_adata_path
+
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+
+    def setup(self, stage = None):
+
+        # Load the pre-computed AnnData object splits
+        train_adata = ad.read_h5ad(self.train_adata_path)
+        val_adata = ad.read_h5ad(self.val_adata_path)
+        test_adata = ad.read_h5ad(self.test_adata_path)
+
+        # Create Datasets
+        self.train_dataset = MethylDataset(train_adata)
+        self.val_dataset = MethylDataset(val_adata)
+        self.test_dataset = MethylDataset(test_adata)
+
+    def train_dataloader(self):
+        return DataLoader(
+            self.train_dataset,
+            batch_size = self.batch_size,
+            shuffle = True,
+            num_workers = self.num_workers,
+            pin_memory = False,
+            persistent_workers = True
+        )
+    
+    def val_dataloader(self):
+        return DataLoader(
+            self.val_dataset,
+            batch_size = self.batch_size,
+            shuffle = False,
+            num_workers = self.num_workers,
+            pin_memory = False,
+            persistent_workers = True
+        )
+    
+    def test_dataloader(self):
+        return DataLoader(
+            self.test_dataset,
+            batch_size = self.batch_size,
+            shuffle = False,
+            num_workers = self.num_workers,
+            pin_memory = False,
+            persistent_workers = True
+        )
+
+# [END]

@@ -26,7 +26,7 @@ from tqdm import tqdm
 project_root = Path.cwd().parent
 sys.path.append(str(project_root / "src"))
 
-from MethylCDM.models.betaVAE import BetaVAE
+from MethylVAE.models.betaVAE import BetaVAE
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate Beta-VAE latent-only AnnData objects.")

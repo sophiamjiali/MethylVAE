@@ -34,9 +34,9 @@ import optuna
 from optuna.samplers import TPESampler
 from optuna.pruners import MedianPruner
 
-from MethylCDM.utils.utils import init_environment, load_config, resolve_path
-from MethylCDM.training.betaVAE_objective import objective
-from MethylCDM.constants import BETAVAE_SWEEP_DIR
+from MethylVAE.utils.utils import init_environment, load_config, resolve_path
+from MethylVAE.training.betaVAE_objective import objective
+from MethylVAE.constants import BETAVAE_SWEEP_DIR
 
 
 # ==============================================================================

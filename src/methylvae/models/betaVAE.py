@@ -10,108 +10,18 @@
 # Notes:            Compatible with PyTorch Lightning
 # ==============================================================================
 
-from torch import Tensor
-import pytorch_lightning as pl
+import math
 import torch
+
+import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
+
 from warmup_scheduler import GradualWarmupScheduler
-import math
+from torch import Tensor
 
-# =====| Encoder Class |========================================================
-
-class MethylEncoder(nn.Module):
-    def __init__(self,
-                 input_dim: int,
-                 latent_dim: int,
-                 hidden_dims: list,
-                 input_dropout: float = 0.1):
-        """
-        Parameters
-        ----------
-        input_dim     : Number of CpG probes (e.g. 211580 for train)
-        latent_dim    : Dimension of the bottleneck layer fed into z_mu/z_logvar
-        hidden_dims   : List of hidden layer widths for gradual compression.
-                        Recommended ranges to sweep:
-                          [1024, 256, 128]
-                          [2048, 512, 128]
-                          [2048, 1024, 256, 128]
-        input_dropout : Dropout applied to the raw input only.
-                        Sweep: [0.1, 0.2, 0.3]. Default 0.1.
-        """
-
-        super(MethylEncoder, self).__init__()
-
-        self.input_dim = input_dim
-        self.latent_dim = latent_dim
-
-        # Build the encoder architecture
-        modules = [nn.Dropout(p = input_dropout)]
-
-        curr_ch = input_dim
-        for h_dim in hidden_dims:
-            modules.append(
-                nn.Sequential(
-                    nn.Linear(curr_ch, h_dim),
-                    nn.LayerNorm(h_dim),
-                    nn.GELU()
-                )
-            )
-            curr_ch = h_dim
-
-        # Last layer interfaces with the latent dimension
-        modules.append(nn.Sequential(
-            nn.Linear(curr_ch, self.latent_dim),
-            nn.LayerNorm(self.latent_dim),
-            nn.GELU()
-        ))
-        self.encoder = nn.Sequential(*modules)
-
-    def forward(self, x):
-        return self.encoder(x)
-
-# =====| Decoder Class |========================================================
-
-class MethylDecoder(nn.Module):
-    def __init__(self,
-                 input_dim: int,
-                 latent_dim: int,
-                 hidden_dims: list):
-        """
-        Parameters
-        ----------
-        input_dim   : Number of CpG probes (reconstruction target)
-        latent_dim  : Dimensionality of latent z
-        hidden_dims : Hidden layer widths (mirror of encoder, reversed).
-                      E.g. if encoder_dims=[1024,256,128], pass decoder_dims=[256,1024]
-        """
-    
-        super(MethylDecoder, self).__init__()
-
-        self.input_dim = input_dim
-        self.latent_dim = latent_dim
-        self.hidden_dims = hidden_dims
-
-        # Build the decoder architecture, mirroring the encoder
-        modules = []
-        curr_ch = self.latent_dim
-        for h_dim in self.hidden_dims:
-            modules.append(
-                nn.Sequential(
-                    nn.Linear(curr_ch, h_dim),      
-                    nn.BatchNorm1d(h_dim),    
-                    nn.GELU()
-                )
-            )
-            curr_ch = h_dim
-
-        # Last layer w/o activation, M-values are unbounded
-        modules.append(nn.Linear(curr_ch, self.input_dim))
-        
-        self.decoder = nn.Sequential(*modules)
-
-    def forward(self, z):
-        return self.decoder(z)
+from methylvae.models.encoder import MethylEncoder
+from methylvae.models.decoder import MethylDecoder
 
 
 # =====| LightningModule Class |================================================

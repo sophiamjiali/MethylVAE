@@ -18,9 +18,9 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
-from MethylCDM.utils.utils import init_environment, load_config, resolve_path
-from MethylCDM.training.train import run_training
-from MethylCDM.constants import BETAVAE_CHECKPOINT_DIR
+from MethylVAE.utils.utils import init_environment, load_config, resolve_path
+from MethylVAE.training.train import run_training
+from MethylVAE.constants import BETAVAE_CHECKPOINT_DIR
 
 def parse_args():
     parser = argparse.ArgumentParser(

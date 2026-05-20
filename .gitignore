@@ -1,8 +1,8 @@
 # all data files
-data/
+/data/
 tools/
 wandb/
-models/
+/models/
 logs/
 experiments/
 
