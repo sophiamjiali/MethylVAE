@@ -2,7 +2,7 @@
 /data/
 tools/
 wandb/
-/models/
+/checkpoints/
 logs/
 experiments/
 
