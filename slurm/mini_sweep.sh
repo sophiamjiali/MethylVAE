@@ -1,13 +1,14 @@
 #!/bin/bash
 # ==============================================================================
-# Script:           train.slurm
-# Purpose:          Single BetaVAE training run (fixed config)
+# Script:           mini_sweep.slurm
+# Purpose:          Lightweight Optuna sweep for BetaVAE (debug / compatibility)
+#                   Single-node, low-cost hyperparameter exploration.
 # ==============================================================================
 
-#SBATCH --job-name=betavae_train
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.err
-#SBATCH --time=24:00:00
+#SBATCH --job-name=betavae_mini_sweep
+#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/mini_%j.out
+#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/mini_%j.err
+#SBATCH --time=06:00:00
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
@@ -23,17 +24,13 @@ conda activate methylcdm-env
 
 cd /ddn_exa/campbell/sli/methylcdm-project
 
-mkdir -p logs/train
-
-# Avoid PyTorch Lightning SLURM mis-detection issues
-unset SLURM_NTASKS
-unset SLURM_JOB_NAME
+mkdir -p logs/sweep
 
 echo "=========================================="
-echo "Job ID:     $SLURM_JOB_ID"
-echo "Node:       $SLURMD_NODENAME"
-echo "GPU:        $CUDA_VISIBLE_DEVICES"
-echo "Start:      $(date)"
+echo "Mini Sweep Job ID:  $SLURM_JOB_ID"
+echo "Node:               $SLURMD_NODENAME"
+echo "GPU:                $CUDA_VISIBLE_DEVICES"
+echo "Start time:         $(date)"
 echo "=========================================="
 
 nvidia-smi
@@ -42,17 +39,26 @@ nvidia-smi
 # Experiment tracking
 # ------------------------------------------------------------------------------
 
-export WANDB_PROJECT="MethylCDM-BetaVAE"
+export WANDB_PROJECT="MethylCDM-BetaVAE-MiniSweep"
 # export WANDB_MODE=offline
+
+# ------------------------------------------------------------------------------
+# Optuna safety (optional but consistent with full sweep)
+# ------------------------------------------------------------------------------
+
+export OPTUNA_SQLITE_TIMEOUT=300
+
+unset SLURM_NTASKS
+unset SLURM_JOB_NAME
 
 # ------------------------------------------------------------------------------
 # Execution
 # ------------------------------------------------------------------------------
 
-srun python scripts/run_train.py \
+srun python scripts/sweeps/run_mini_sweep.py \
     --config_pipeline pipeline.yaml \
-    --config_train betaVAE_train.yaml \
-    --seed 42 \
+    --config_train betaVAE.yaml \
+    --trial_seed 0 \
     --verbose
 
 # ------------------------------------------------------------------------------
@@ -60,5 +66,5 @@ srun python scripts/run_train.py \
 # ------------------------------------------------------------------------------
 
 echo "=========================================="
-echo "End: $(date)"
+echo "End time: $(date)"
 echo "=========================================="

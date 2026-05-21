@@ -1,3 +1,14 @@
+# ==============================================================================
+# Script:           dataset.py
+# Purpose:          Methylation Dataset for PyTorch Lightning
+# Author:           Sophia Li
+# Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
+# Date:             12/31/2025
+# ==============================================================================
+
+import torch
+
+from torch.utils.data import Dataset
 
 class MethylDataset(Dataset):
     def __init__(self, adata):

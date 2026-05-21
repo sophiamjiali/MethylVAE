@@ -1,15 +1,16 @@
 # ==============================================================================
-# Script:           methylation_datamodule.py
-# Purpose:          Methylation DataModule and Dataset for PyTorch Lightning
+# Script:           datamodule.py
+# Purpose:          Methylation DataModule for PyTorch Lightning
 # Author:           Sophia Li
 # Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
 # Date:             12/31/2025
 # ==============================================================================
 
-import torch
 import anndata as ad
 import lightning.pytorch as pl
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
+
+from methylvae.data.dataset import MethylDataset
 
 class MethylDataModule(pl.LightningDataModule):
     def __init__(self,

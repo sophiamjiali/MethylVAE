@@ -1,0 +1,10 @@
+loss:
+  reconstruction: mse
+  beta: 0.1   # overridden by sweep
+
+kl:
+  free_bits: 0.25
+  anneal:
+    strategy: cyclical
+    num_cycles: 2   # overridden by sweep
+    warmup_ratio: 0.1

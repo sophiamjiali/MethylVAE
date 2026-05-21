@@ -1,0 +1,13 @@
+seed: 42
+
+project:
+  name: beta_vae_methylation
+  root_dir: /Users/sophiali/Desktop/MethylVAE
+
+paths:
+  data_dir: data/
+  experiment_dir: experiments/
+  checkpoint_dir: checkpoints/
+
+device:
+  num_workers: 2

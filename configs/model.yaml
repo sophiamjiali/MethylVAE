@@ -1,0 +1,11 @@
+model:
+  encoder_dims: [2048, 512, 128]  # overridden by sweep
+  latent_dim: 128                 # overridden by sweep
+  input_dropout: 0.1              # overridden by sweep
+
+  decoder_dims: null              # mirror encoder unless explicitly set
+  activation: GELU
+  normalization: LayerNorm
+
+vae:
+  prior: standard_normal

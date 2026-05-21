@@ -1,13 +1,14 @@
 #!/bin/bash
 # ==============================================================================
-# Script:           train.slurm
-# Purpose:          Single BetaVAE training run (fixed config)
+# Script:           eval.slurm
+# Purpose:          Generate BetaVAE latent embeddings from checkpoint
+#                   Outputs .h5ad with obsm["X_embeddings"]
 # ==============================================================================
 
-#SBATCH --job-name=betavae_train
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.err
-#SBATCH --time=24:00:00
+#SBATCH --job-name=betavae_eval
+#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/eval/%x_%j.out
+#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/eval/%x_%j.err
+#SBATCH --time=04:00:00
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
@@ -23,37 +24,37 @@ conda activate methylcdm-env
 
 cd /ddn_exa/campbell/sli/methylcdm-project
 
-mkdir -p logs/train
+mkdir -p logs/eval
 
-# Avoid PyTorch Lightning SLURM mis-detection issues
+# Avoid PyTorch Lightning SLURM auto-detection issues
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
 
 echo "=========================================="
-echo "Job ID:     $SLURM_JOB_ID"
-echo "Node:       $SLURMD_NODENAME"
-echo "GPU:        $CUDA_VISIBLE_DEVICES"
-echo "Start:      $(date)"
+echo "Eval Job ID:   $SLURM_JOB_ID"
+echo "Node:          $SLURMD_NODENAME"
+echo "GPU:           $CUDA_VISIBLE_DEVICES"
+echo "Start:         $(date)"
 echo "=========================================="
 
 nvidia-smi
 
 # ------------------------------------------------------------------------------
-# Experiment tracking
-# ------------------------------------------------------------------------------
-
-export WANDB_PROJECT="MethylCDM-BetaVAE"
-# export WANDB_MODE=offline
-
-# ------------------------------------------------------------------------------
 # Execution
 # ------------------------------------------------------------------------------
 
-srun python scripts/run_train.py \
-    --config_pipeline pipeline.yaml \
-    --config_train betaVAE_train.yaml \
-    --seed 42 \
-    --verbose
+CHECKPOINT="/path/to/checkpoint.ckpt"
+DATA="/path/to/pancancer_cohort.h5ad"
+OUT_DIR="/ddn_exa/campbell/sli/methylcdm-project/data/embeddings"
+
+srun python scripts/run_eval.py \
+    --checkpoint "$CHECKPOINT" \
+    --data_path "$DATA" \
+    --output_dir "$OUT_DIR" \
+    --batch_size 512 \
+    --name "pancancer" \
+    --device cuda \
+    --split_projects
 
 # ------------------------------------------------------------------------------
 # Finish

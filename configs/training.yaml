@@ -1,0 +1,18 @@
+training:
+  batch_size: 128   # overridden by sweep
+  max_epochs: 300
+
+  optimizer:
+    type: adamw
+    lr: 0.0001       # overridden by sweep
+
+  scheduler:
+    type: cosine
+    warmup_steps: 1000
+
+  gradient_clip: 1.0
+  weight_decay: 0.0
+
+  early_stopping:
+    enabled: true
+    patience: 20

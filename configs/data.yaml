@@ -1,0 +1,6 @@
+input_dim: 30000
+
+data:
+  train_adata_path: data/pancancer_train_adata.h5ad
+  val_adata_path: data/pancancer_val_adata.h5ad
+  test_adata_path: data/pancancer_test_adata.h5ad

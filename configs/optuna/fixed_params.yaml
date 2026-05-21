@@ -1,0 +1,12 @@
+study:
+  direction: minimize
+  metric: val_loss
+
+pruning:
+  type: asha
+  min_resource: 10
+  reduction_factor: 3
+
+runtime:
+  max_trials: 100
+  timeout: null

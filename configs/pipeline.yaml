@@ -1,9 +1,0 @@
-# ==============================================================================
-# Script:           pipeline.yaml
-# Purpose:          Pipeline and environment initialization configurations
-# Author:           Sophia Li
-# Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
-# Date:             11/18/2025
-# ==============================================================================
-
-seed: 42

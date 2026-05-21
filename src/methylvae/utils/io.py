@@ -1,57 +1,21 @@
 # ==============================================================================
-# Script:           utils.py
-# Purpose:          Utility functions for configuration and initialization
+# Script:           io.py
+# Purpose:          Utility functions for reading and writing
 # Author:           Sophia Li
 # Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
 # Date:             11/18/2025
-#
-# Configurations:   pipeline.yaml
 # ==============================================================================
 
-import random
-import numpy as np
 import pandas as pd
-import os
-import torch
-import yaml
-from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 
-from MethylVAE.constants import (
-    CONFIG_DIR,
+from methylvae.constants import (
     ANNOTATION_27K,
     ANNOTATION_450K,
     ANNOTATION_EPIC
 )
 
 # =====| File I/O Utilities |===================================================
-
-def resolve_path(path_str, default_path, build_path = False):
-    """
-    Resolves and returns the path. If a relative path is provided through
-    a file or directory name, it is automatically resolved relative to the 
-    project root. Else, the absolute path is returned as provided.
-
-    Parameters
-    ----------
-    path_str (str): path to a YAML configuration file
-    default_path (str): default path (constant) to the project root
-    build_path (boolean): appends the path to the default if toggled
-
-    Returns
-    -------
-    path (Path): resolved Path object from pathlib
-    """
-
-    p = Path(path_str)
-
-    if p.is_absolute():
-        return p.resolve()
-    elif build_path:
-        return (default_path / path_str).resolve()
-    else:
-        return default_path
-
 
 def build_meta_fields(fields):
     meta = []
@@ -145,61 +109,4 @@ def load_beta_file(path):
     beta_values = beta_values.rename(columns = {"beta_value": sample_id})
     return beta_values
 
-# =====| Configuration & Environment |==========================================
-
-def init_environment(config):
-    """
-    Initializes the current runtime environment for reproducibility.
-    
-    Parameters
-    ----------
-    config : a configuration object containing:
-        - seed (int): integer value for reproducibility
-    """
-
-    # Fetch all relevant values from the configurations object
-    seed = config.get('seed', -1)
-
-    # Set the seed for all appropriate packages of the pipeline
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
-
-
-def load_config(path_str):
-    """
-    Loads and returns the configuration file provided by the path. If a relative
-    path is provided (filename), automatically resolves it relative to the 
-    project root.
-
-    Parameters
-    ----------
-    path_str (str): path to a YAML configuration file
-
-    Returns
-    -------
-    config (dict): dictionary of configuration values
-
-    Raises
-    ------
-    FileNotFoundError: if the file does not exist at the specified path
-    ValueError: if the YAML file cannot be parsed into a dictionary
-    """
-
-    # Resolve to the project's root if the provided path is not absolute
-    path = resolve_path(path_str, CONFIG_DIR, build_path = True)
-
-    if not path.exists():
-        raise FileNotFoundError(f"Configuration file not found at {path}.")
-
-    with open(path) as f:
-        config = yaml.safe_load(f)
-
-    if not isinstance(config, dict):
-        raise ValueError(
-            f"Configuration file {path} did not return a dictionary."
-        )
-
-    return config
+# [END]
