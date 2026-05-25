@@ -8,6 +8,10 @@
 
 import torch
 
+import numpy as np
+import scipy.sparse as sp
+
+
 from torch.utils.data import Dataset
 
 class MethylDataset(Dataset):
@@ -18,10 +22,12 @@ class MethylDataset(Dataset):
         return self.adata.n_obs
     
     def __getitem__(self, idx):
-
-        # Handle sparse matrices
         x = self.adata.X[idx]
-        x = x.toarray().squeeze()
+
+        if sp.issparse(x):
+            x = x.toarray()
+
+        x = np.asarray(x).squeeze()
         x = torch.tensor(x, dtype = torch.float32)
         return {"methylation_data": x}
     

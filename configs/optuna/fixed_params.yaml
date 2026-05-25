@@ -1,12 +1,23 @@
+# ==============================================================================
+# Config:       fixed_params.yaml
+# Purpose:      Fixed sweep infrastructure parameters (pruner, runtime, ...).
+# ==============================================================================
+
 study:
   direction: minimize
   metric: val_loss
 
-pruning:
-  type: asha
-  min_resource: 10
-  reduction_factor: 3
+pruner:
+  type: median
+  n_startup_trials: 10
+  n_warmup_steps: 20
+  interval_steps: 5
+
+sampler:
+  n_startup_trials: 10
 
 runtime:
-  max_trials: 100
+  max_trials: 60
   timeout: null
+
+# [END]

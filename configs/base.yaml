@@ -10,4 +10,3 @@ paths:
   checkpoint_dir: checkpoints/
 
 device:
-  num_workers: 2

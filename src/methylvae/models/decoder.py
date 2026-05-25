@@ -32,19 +32,19 @@ class MethylDecoder(nn.Module):
 
         # Build the decoder architecture, mirroring the encoder
         modules = []
-        curr_ch = self.latent_dim
+        curr_dim = self.latent_dim
         for h_dim in self.hidden_dims:
             modules.append(
                 nn.Sequential(
-                    nn.Linear(curr_ch, h_dim),      
-                    nn.BatchNorm1d(h_dim),    
+                    nn.Linear(curr_dim, h_dim),      
+                    nn.LayerNorm(h_dim),    
                     nn.GELU()
                 )
             )
-            curr_ch = h_dim
+            curr_dim = h_dim
 
         # Last layer w/o activation, M-values are unbounded
-        modules.append(nn.Linear(curr_ch, self.input_dim))
+        modules.append(nn.Linear(curr_dim, self.input_dim))
         
         self.decoder = nn.Sequential(*modules)
 

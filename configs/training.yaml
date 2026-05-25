@@ -1,18 +1,21 @@
-training:
-  batch_size: 128   # overridden by sweep
-  max_epochs: 300
+# ==============================================================================
+# Config:       training.yaml
+# Purpose:      Fixed training infrastructure parameters.
+#               Sweep-overridden values are annotated below.
+# ==============================================================================
 
-  optimizer:
-    type: adamw
-    lr: 0.0001       # overridden by sweep
+max_epochs: 200
+batch_size: 128
 
-  scheduler:
-    type: cosine
-    warmup_steps: 1000
+optimizer: adam
+lr: 0.001 
 
-  gradient_clip: 1.0
-  weight_decay: 0.0
+gradient_clip_val: 1.0
 
-  early_stopping:
-    enabled: true
-    patience: 20
+early_stopping:
+  patience: 20
+  min_delta: 1e-5
+
+seed: 42
+
+# [END]

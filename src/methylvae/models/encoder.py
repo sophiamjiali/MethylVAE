@@ -38,23 +38,19 @@ class MethylEncoder(nn.Module):
         # Build the encoder architecture
         modules: list[nn.Module] = [nn.Dropout(p = input_dropout)]
 
-        curr_ch = input_dim
+        curr_dim = input_dim
         for h_dim in hidden_dims:
             modules.append(
                 nn.Sequential(
-                    nn.Linear(curr_ch, h_dim),
+                    nn.Linear(curr_dim, h_dim),
                     nn.LayerNorm(h_dim),
                     nn.GELU()
                 )
             )
-            curr_ch = h_dim
+            curr_dim = h_dim
 
-        # Last layer interfaces with the latent dimension
-        modules.append(nn.Sequential(
-            nn.Linear(curr_ch, self.latent_dim),
-            nn.LayerNorm(self.latent_dim),
-            nn.GELU()
-        ))
+        # Linear layer directly into latent dimension
+        modules.append(nn.Linear(curr_dim, self.latent_dim))
         self.encoder = nn.Sequential(*modules)
 
     def forward(self, x):

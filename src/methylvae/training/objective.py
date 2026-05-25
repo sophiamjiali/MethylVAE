@@ -1,6 +1,6 @@
 # ==============================================================================
-# Script:           betaVAE_objective.py
-# Purpose:          Defines the Optuna objective function for training.
+# Script:           objective.py
+# Purpose:          Optuna objective function for BetaVAE hyperparameter sweeps.
 # Author:           Sophia Li
 # Affiliation:      CCG Lab, Princess Margaret Cancer Center, UHN, UofT
 # Date:             12/31/2025
@@ -14,77 +14,85 @@ import wandb
 from methylvae.training.train import train
 
 
-def objective(trial, study_name, sweep_config):
+def objective(trial, study_name: str, config: dict):
     """
-    Objective function for an an Optuna hyperparameter optimization trial.
+    Optuna objective for one hyperparameter trial.
+
+    Parameters
+    ----------
+    trial      : Optuna Trial object.
+    study_name : Study name string, used for run naming and checkpointing.
+    config     : Merged flat config dict from merge_configs_with_search_space().
+                 Fixed keys (input_dim, paths, max_epochs, free_bits, etc.) are
+                 passed through. Swept keys are overridden below from
+                 config["search_space"].
+
+    Returns
+    -------
+    float : val_loss (minimised). Returns inf on posterior variance collapse.
     """
 
-    # Wrap the trial to prune it if it fails
     try:
+        search_space = config["search_space"]
+        trial_config = {k: v for k, v in config.items() if k != "search_space"}
 
-        # Resolve the sweep configurations into runtime values
-        config = dict(sweep_config)
-        config['latent_dim'] = trial.suggest_int(
-            'latent_dim', *sweep_config['latent_dim']
+        # --- Hyperparameter sampling ------------------------------------------
+
+        trial_config["latent_dim"] = trial.suggest_int(
+            "latent_dim", *search_space["latent_dim"]
         )
-        config['beta'] = trial.suggest_float(
-            'beta', *sweep_config['beta'], log = True
+        trial_config["beta"] = trial.suggest_float(
+            "beta", *search_space["beta"], log=True
         )
-        config['lr'] = trial.suggest_float(
-            'lr', *sweep_config['lr'], log = True
+        trial_config["lr"] = trial.suggest_float(
+            "lr", *search_space["lr"], log=True
         )
-        config['input_dropout'] = trial.suggest_float(
-            'input_dropout', *sweep_config['input_dorpout']
+        trial_config["input_dropout"] = trial.suggest_float(
+            "input_dropout", *search_space["input_dropout"]
+        )
+        trial_config["num_cycles"] = trial.suggest_categorical(
+            "num_cycles", search_space["num_cycles"]
+        )
+        trial_config["batch_size"] = trial.suggest_categorical(
+            "batch_size", search_space["batch_size"]
         )
 
-        config['num_cycles'] = trial.suggest_categorical(
-            'num_cycles', sweep_config['num_cycles']
-        )
+        # Encoder architecture indexed categorically
         encoder_idx = trial.suggest_categorical(
-            'encoder_dims_idx', list(range(len(sweep_config['encoder_dims'])))
+            "encoder_dims_idx",
+            list(range(len(search_space["encoder_dims"])))
         )
-        config['encoder_dims'] = sweep_config['encoder_dims'][encoder_idx]
-        config['batch_size'] = trial.suggest_categorical(
-            'batch_size', sweep_config['batch_size']
-        )
+        trial_config["encoder_dims"] = search_space["encoder_dims"][encoder_idx]
 
-        # Train the model
+        # --- Training ---------------------------------------------------------
+
         metrics = train(
-            config = config,
-            run_name = f"{study_name}_trial_{trial.number}",
-            seed = config['seed'],
-            trial = trial,
-            study_name = study_name
+            config     = trial_config,
+            run_name   = f"{study_name}_trial_{trial.number}",
+            seed       = trial_config["seed"],
+            trial      = trial,
+            study_name = study_name,
         )
 
-        val_loss = metrics.get('val_loss')
-        mean_post_var = metrics.get('mean_posterior_var')
+        # --- Metric extraction ------------------------------------------------
 
+        val_loss = metrics.get("val_loss")
         if val_loss is None:
-            raise optuna.exceptions.TrialPruned(
-                "val_loss missing"
-            )
-        
-        val_loss = val_loss.item()
+            raise optuna.exceptions.TrialPruned("val_loss missing from callback_metrics")
+        val_loss = float(val_loss)
 
-        mean_post_var = (
-            mean_post_var.item()
-            if mean_post_var is not None
-            else 0.0
-        )
+        val_post_var = metrics.get("val_post_var")
+        val_post_var = float(val_post_var) if val_post_var is not None else 0.0
 
-        # Penalize trials where posterior variance is critically low
-        if mean_post_var < 0.1:
+        if val_post_var < 0.1:
             return float("inf")
-        
-        # Perform Optuna pruning
-        trial.report(val_loss, step=sweep_config["max_epochs"])
 
+        trial.report(val_loss, step=trial.number)
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
 
         return val_loss
-    
+
     except optuna.exceptions.TrialPruned:
         raise
 
@@ -95,6 +103,6 @@ def objective(trial, study_name, sweep_config):
     finally:
         wandb.finish()
         torch.cuda.empty_cache()
-        gc.collect() 
+        gc.collect()
 
 # [END]
