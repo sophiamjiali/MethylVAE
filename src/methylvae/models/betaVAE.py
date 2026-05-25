@@ -8,13 +8,16 @@
 
 import math
 import torch
+import wandb
 
 import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
 
 from warmup_scheduler import GradualWarmupScheduler
+from pytorch_lightning.loggers import WandbLogger
 from torch import Tensor
+from typing import cast, Any
 
 from methylvae.models.encoder import MethylEncoder
 from methylvae.models.decoder import MethylDecoder
@@ -73,6 +76,9 @@ class BetaVAE(pl.LightningModule):
         # Initialize the linear layers using Xavier Initialization
         self.apply(self._init_weights)
 
+        # Initialize a buffer to store logging metrics
+        self.val_step_outputs = []
+
     # -------------------------------------------------------------------------
 
     def encode(self, x):
@@ -106,7 +112,7 @@ class BetaVAE(pl.LightningModule):
         """
         
         total_steps = max(1, self.trainer.estimated_stepping_batches)
-        cycle_len   = total_steps / self.hparams.num_cycles
+        cycle_len   = total_steps / self.hparams['num_cycles']
         
         # Position within the current cycle [0, 1)
         cycle_pos   = (self.global_step % math.ceil(cycle_len)) / cycle_len
@@ -114,7 +120,7 @@ class BetaVAE(pl.LightningModule):
         # Linear ramp for first half of cycle, hold at max for second half
         annealed    = min(1.0, cycle_pos * 2.0)
         
-        return self.hparams.beta * annealed
+        return self.hparams['beta'] * annealed
 
     # -------------------------------------------------------------------------
     
@@ -142,10 +148,8 @@ class BetaVAE(pl.LightningModule):
         # Per-sample, per-dimension KL: shape (B, D)
         kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
  
-        # CHANGED: Free-bits threshold applied per dimension before aggregation.
-        # Previously KL was summed over dims then averaged over batch without
-        # any floor, allowing individual dimensions to fully collapse.
-        kl_per_dim = torch.clamp(kl_per_dim, min=self.hparams.free_bits)
+        # Free-bits threshold applied per dimension before aggregation.
+        kl_per_dim = torch.clamp(kl_per_dim, min = self.hparams['free_bits'])
  
         # Mean over batch, sum over dimensions — standard ELBO convention
         return kl_per_dim.mean(dim=0).sum()
@@ -183,7 +187,8 @@ class BetaVAE(pl.LightningModule):
         self.log('train_loss',       losses['total_loss'], prog_bar = True)
         self.log('train_recon',      losses['reconstruction_loss'])
         self.log('train_kl',         losses['kl_loss'])
-        self.log('train_kl_per_dim', losses['kl_loss'] /self.hparams.latent_dim)
+        self.log('train_kl_per_dim', losses['kl_loss'] 
+                 / self.hparams['latent_dim'])
         self.log('beta',             losses['beta'])
         self.log('train_post_var',   logvar.exp().mean())
 
@@ -198,8 +203,17 @@ class BetaVAE(pl.LightningModule):
         self.log('val_loss',       losses['total_loss'], prog_bar = True)
         self.log('val_recon',      losses['reconstruction_loss'])
         self.log('val_kl',         losses['kl_loss'])
-        self.log('val_kl_per_dim', losses['kl_loss'] / self.hparams.latent_dim)
+        self.log('val_kl_per_dim', losses['kl_loss'] 
+                 / self.hparams['latent_dim'])
         self.log('val_post_var',   logvar.exp().mean(), prog_bar = True)
+
+        # Save the latent variables for epoch-end diagnostics
+        self.val_step_outputs.append({
+            'mu': mu.detach(),
+            'logvar': logvar.detach()
+        })
+
+        return losses['total_loss']
     
 
     def test_step(self, batch, batch_idx):
@@ -210,9 +224,39 @@ class BetaVAE(pl.LightningModule):
         self.log('test_loss',     losses['total_loss'])
         self.log('test_post_var', logvar.exp().mean())
 
+        return losses['total_loss']
+    
     # -------------------------------------------------------------------------
 
-    def configure_optimizers(self):
+    def on_validation_epoch_end(self):
+        
+        # 1. Aggregate from list (using the buffer strategy we discussed)
+        all_mu = torch.cat([x['mu'] for x in self.val_step_outputs], dim=0)
+        all_logvar = torch.cat([x['logvar'] for x in 
+                                self.val_step_outputs], dim = 0)
+
+        # 2. Latent Space Health Check
+        mu_variance = torch.var(all_mu, dim = 0).mean()
+        self.log("diag/latent_mu_variance", mu_variance)
+
+        # 3. Log Distributions to WandB
+        if self.logger:
+            # Tell the IDE: "Treat self.logger as a WandbLogger"
+            wandb_logger = cast(WandbLogger, self.logger)
+            
+            # Access the experiment attribute safely
+            if wandb_logger.experiment:
+                wandb_logger.experiment.log({
+                    "diag/mu_hist": wandb.Histogram(all_mu.cpu().numpy()),
+                    "diag/logvar_hist": wandb.Histogram(all_logvar.cpu().numpy())
+                })
+
+        # 4. Clear the buffer for the next epoch
+        self.val_step_outputs.clear()
+
+    # -------------------------------------------------------------------------
+
+    def configure_optimizers(self): # type: ignore
         """
         Adam optimizer with linear warm-up + cosine annealing LR schedule.
         Warm-up covers the first 5% of training steps.
@@ -222,11 +266,11 @@ class BetaVAE(pl.LightningModule):
         warmup_steps = max(1, int(0.05 * total_steps))
 
         # Initialize the Adam Optimizer
-        optimizer = torch.optim.Adam(self.parameters(), lr = self.hparams.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr = self.hparams['lr'])
 
         # Initialize the Cosine Annealing Scheduler
         cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max = total_steps
+            optimizer, T_max = int(total_steps)
         )
 
         # Initialize the Warm-up Scheduler
@@ -251,7 +295,7 @@ class BetaVAE(pl.LightningModule):
     def sample(self,
                num_samples: int,
                current_device: int,
-               interpolation: Tensor = None,
+               interpolation: Tensor,
                alpha: float = 1.0) -> Tensor:
         """
         Samples from the latent space and returns reconstructed M-value profiles.
@@ -267,7 +311,8 @@ class BetaVAE(pl.LightningModule):
         -------
         Tensor : Reconstructed M-value profiles of shape (num_samples, input_dim)
         """
-        z = torch.randn(num_samples, self.hparams.latent_dim).to(current_device)
+        z = torch.randn(num_samples, 
+                        self.hparams['latent_dim']).to(current_device)
 
         if interpolation is not None:
             z = z + torch.from_numpy(alpha * interpolation).float().to(current_device)

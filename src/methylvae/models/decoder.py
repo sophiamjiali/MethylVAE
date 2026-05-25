@@ -43,8 +43,9 @@ class MethylDecoder(nn.Module):
             )
             curr_dim = h_dim
 
-        # Last layer w/o activation, M-values are unbounded
+        # Cap with Tanh to match [-1, 1] M-value scaling
         modules.append(nn.Linear(curr_dim, self.input_dim))
+        modules.append(nn.Tanh())
         
         self.decoder = nn.Sequential(*modules)
 
