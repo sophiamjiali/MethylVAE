@@ -27,6 +27,7 @@ from methylvae.tuning.study import get_or_create_study_name, build_study
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--name",           required=True)
     parser.add_argument("--config_data",    required=True)
     parser.add_argument("--config_train",   required=True)
     parser.add_argument("--config_loss",    required=True)
@@ -36,7 +37,6 @@ def parse_args():
     parser.add_argument("--trial_seed",        type=int,  default=0)
     parser.add_argument("--n_startup_trials",  type=int,  default=10)
     parser.add_argument("--report_only",       action="store_true")
-    parser.add_argument("--study_name",        type=str,  default=None)
     parser.add_argument("--verbose",           action="store_true")
 
     return parser.parse_args()
@@ -58,12 +58,11 @@ def main():
     )
     Path(experiment_dir).mkdir(parents=True, exist_ok=True)
 
-    study_name = (
-        args.study_name
-        if args.study_name
-        else get_or_create_study_name(experiment_dir)
+    study_name = get_or_create_study_name(
+        experiment_dir, 
+        prefix="full", 
+        name=args.name
     )
-
     storage = f"sqlite:///{experiment_dir}/{study_name}.db"
 
     study = build_study(

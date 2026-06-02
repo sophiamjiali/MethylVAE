@@ -57,7 +57,7 @@ def main():
     config["input_dropout"] = args.input_dropout
     config["seed"]          = args.seed
 
-    run_name = f"MethylVAE_{args.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    run_name = f"train_{args.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     if args.verbose:
         print("=" * 60)

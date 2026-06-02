@@ -6,6 +6,7 @@
 # Date:             01/01/2026
 # ==============================================================================
 
+import os
 import wandb
 from pytorch_lightning.loggers import WandbLogger
 
@@ -15,18 +16,19 @@ def configure_loggers(trial = None, study_name = None):
     # Start a new run with this trial if in a sweep
     if trial is not None:
         run = wandb.init(
-            project = study_name,
+            project = "MethylVAE",
+            group = study_name,
             name    = f"trial_{trial.number}",
-            reinit  = True,
             config  = trial.params
         )
 
     # Else, start a regular run that isn't in a sweep
     else:
         run = wandb.init(
-            project = study_name if study_name is not None else "betaVAE",
+            project = "MethylVAE",
+            group = study_name if study_name is not None else "betaVAE",
             name    = "single_run",
-            reinit  = True
+            config = {}
         )
 
     wandb_logger = WandbLogger(

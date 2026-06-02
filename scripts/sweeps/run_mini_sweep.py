@@ -56,7 +56,7 @@ def main():
 
     study_name = get_or_create_study_name(
         experiment_dir, 
-        prefix="MethylVAE_mini", 
+        prefix="mini", 
         name=args.name
     )
     storage    = f"sqlite:///{experiment_dir}/{study_name}.db"
