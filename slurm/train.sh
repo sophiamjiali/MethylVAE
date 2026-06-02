@@ -34,11 +34,13 @@ nvidia-smi
 
 export WANDB_PROJECT="MethylVAE-train"
 
+CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/train/$1
+
 srun python scripts/run_train.py \
-    --name $1 \
-    --config_data data.yaml \
-    --config_train train.yaml \
-    --config_loss loss.yaml \
+    --name "$1" \
+    --config_data "${CONFIG_PATH}/data.yaml" \
+    --config_train "${CONFIG_PATH}/train.yaml" \
+    --config_loss "${CONFIG_PATH}/loss.yaml" \
     --latent_dim 128 \
     --encoder_dims 2048 512 128 \
     --input_dropout 0.1 \

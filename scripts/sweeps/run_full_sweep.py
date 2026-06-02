@@ -44,7 +44,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-
     config = merge_configs_with_search_space(
         load_config(args.config_data),
         load_config(args.config_train),

@@ -35,12 +35,14 @@ export OPTUNA_SQLITE_TIMEOUT=300
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
 
+CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/mini/$1
+
 srun python scripts/sweeps/run_mini_sweep.py \
-    --name $1 \
-    --config_data data.yaml \
-    --config_train train.yaml \
-    --config_loss loss.yaml \
-    --config_search config/search_space.yaml \
+    --name "$1" \
+    --config_data "${CONFIG_PATH}/data.yaml" \
+    --config_train "${CONFIG_PATH}/train.yaml" \
+    --config_loss "${CONFIG_PATH}/loss.yaml" \
+    --config_search "${CONFIG_PATH}/search_space.yaml" \
     --trial_seed 42
 
 echo "=========================================="

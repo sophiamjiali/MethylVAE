@@ -1,0 +1,17 @@
+# ==============================================================================
+# Config:       loss.yaml
+# Purpose:      Loss function and KL regularisation parameters.
+#               Sweep-overridden values are annotated below.
+# ==============================================================================
+
+reconstruction: mse
+
+beta: 0.005 
+
+free_bits: 0.5
+
+anneal:
+  strategy: cyclical
+  num_cycles: 4
+
+# [END]

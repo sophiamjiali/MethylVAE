@@ -1,0 +1,21 @@
+# ==============================================================================
+# Config:       training.yaml
+# Purpose:      Fixed training infrastructure parameters.
+#               Sweep-overridden values are annotated below.
+# ==============================================================================
+
+max_epochs: 200
+batch_size: 128
+
+optimizer: adam
+lr: 0.001 
+
+gradient_clip_val: 1.0
+
+early_stopping:
+  patience: 20
+  min_delta: 1e-5
+
+seed: 42
+
+# [END]
