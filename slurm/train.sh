@@ -34,6 +34,8 @@ echo "Start:      $(date)"
 echo "=========================================="
 
 export WANDB_PROJECT="MethylVAE-train"
+export WANDB_MODE=offline
+export WANDB_DIR="/cluster/home/t144807uhn/wandb/train/$1"
 
 CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/train/$1
 
@@ -47,6 +49,8 @@ srun python scripts/run_train.py \
     --input_dropout 0.1 \
     --seed 42 \
     --verbose
+
+wandb sync $WANDB_DIR
 
 echo "=========================================="
 echo "End: $(date)"
