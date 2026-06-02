@@ -46,6 +46,7 @@ def configure_callbacks(trial = None,
         mode      = "min",
         check_on_train_epoch_end = False
     )
+    early_stop_callback.best_score = float('inf')
 
     lr_monitor = LearningRateMonitor(logging_interval="step")
 
