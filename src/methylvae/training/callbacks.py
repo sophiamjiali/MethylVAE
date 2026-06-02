@@ -6,6 +6,9 @@
 # Date:             01/01/2026
 # ==============================================================================
 
+from typing import Optional, Any
+import optuna
+
 from optuna.integration import PyTorchLightningPruningCallback
 import lightning.pytorch as pl
 from lightning.pytorch.callbacks import (
@@ -14,10 +17,10 @@ from lightning.pytorch.callbacks import (
     LearningRateMonitor,
 )
 
-def configure_callbacks(trial = None,
-                        checkpoint_dir = None,
+def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
+                        checkpoint_dir: Optional[str] = None,
                         early_stopping_patience: int = 20,
-                        early_stopping_min_delta: float = 1e-5):
+                        early_stopping_min_delta: float = 1e-5) -> list:
     """
     Configures and returns callbacks for BetaVAE training.
 
@@ -59,7 +62,7 @@ def configure_callbacks(trial = None,
 
     if trial is not None:
         pruning_callback = PyTorchLightningPruningCallback(
-            trial, monitor="val_loss"
+            trial = trial, monitor="val_loss"
         )
         callbacks.append(pruning_callback)
 
