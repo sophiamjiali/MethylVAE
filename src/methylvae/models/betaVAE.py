@@ -200,8 +200,8 @@ class BetaVAE(pl.LightningModule):
         x_hat, mu, logvar = self(x)
         losses = self.compute_loss(x, x_hat, mu, logvar)
 
-        val_loss = losses['total_loss'].detach().mean()
-        
+        val_loss = losses['total_loss'].detach().mean().item()
+
         self.log('val_loss',       val_loss, prog_bar = True)
         self.log('val_recon',      losses['reconstruction_loss'])
         self.log('val_kl',         losses['kl_loss'])
