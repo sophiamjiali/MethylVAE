@@ -214,7 +214,8 @@ class BetaVAE(pl.LightningModule):
             'mu': mu.detach(),
             'logvar': logvar.detach()
         })
-
+        assert isinstance(val_loss, float), f"val_loss must be a float, got {type(val_loss)}"
+        
         return losses['total_loss'].detach()
     
 
