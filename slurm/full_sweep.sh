@@ -1,32 +1,27 @@
 #!/bin/bash
-# ==============================================================================
-# Script:           full_sweep.slurm
-# Purpose:          SLURM array for Optuna BetaVAE hyperparameter sweep
-# ==============================================================================
-
-#SBATCH --job-name=betavae_sweep
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/%x_%A_%a.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/sweep/%x_%A_%a.err
-#SBATCH --time=24:30:00
-#SBATCH --partition=gpu
-#SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
+#SBATCH --output=/cluster/home/t144807uhn/logs/MethylVAE/full/%x/%x_%j.out
+#SBATCH --error=/cluster/home/t144807uhn/logs/MethylVAE/full/%x/%x_%j.err
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
-#SBATCH --array=0-74%2
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=24G
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=sophiamjia.li@mail.utoronto.ca
 
-# ------------------------------------------------------------------------------
-# Environment
-# ------------------------------------------------------------------------------
+# Make the project-specific logs directory
+mkdir -p /cluster/home/t144807uhn/logs/MethylVAE/full/$1
 
-source ~/miniforge3/etc/profile.d/conda.sh
-conda activate methylcdm-env
+# Activate the virtual environment
+module load python3/3.12.11
+source /cluster/home/t144807uhn/envs/methylvae-env/bin/activate
 
-cd /ddn_exa/campbell/sli/methylcdm-project
+# Ensure that all commands resolve back to the proper root directory
+cd /cluster/home/t144807uhn/MethylVAE
 
-mkdir -p logs/sweep
 
 echo "=========================================="
 echo "Sweep Job ID:   $SLURM_ARRAY_JOB_ID"
+echo "Job Name:       $1"
 echo "Trial Index:    $SLURM_ARRAY_TASK_ID"
 echo "Node:           $SLURMD_NODENAME"
 echo "GPU:            $CUDA_VISIBLE_DEVICES"
@@ -35,36 +30,21 @@ echo "=========================================="
 
 nvidia-smi
 
-# ------------------------------------------------------------------------------
-# Experiment tracking
-# ------------------------------------------------------------------------------
-
-export WANDB_PROJECT="MethylCDM-BetaVAE-Sweep"
-# export WANDB_MODE=offline
-
-# ------------------------------------------------------------------------------
-# Optuna / SQLite stability
-# ------------------------------------------------------------------------------
+export WANDB_PROJECT="MethylVAE-full"
 
 export OPTUNA_SQLITE_TIMEOUT=300
 
-# Optional: avoid SLURM misinterpretation in Lightning
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
 
-# ------------------------------------------------------------------------------
-# Execution
-# ------------------------------------------------------------------------------
-
 srun python scripts/sweeps/run_full_sweep.py \
-    --config_pipeline pipeline.yaml \
-    --config_train betaVAE.yaml \
-    --trial_seed $SLURM_ARRAY_TASK_ID \
+    --name $1 \
+    --config_data data.yaml \
+    --config_train train.yaml \
+    --config_loss loss.yaml \
+    --config_search config/search_space.yaml \
+    --trial_seed 42 \
     --verbose
-
-# ------------------------------------------------------------------------------
-# Finish
-# ------------------------------------------------------------------------------
 
 echo "=========================================="
 echo "End: $(date)"

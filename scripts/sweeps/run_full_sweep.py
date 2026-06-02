@@ -27,8 +27,6 @@ from methylvae.tuning.study import get_or_create_study_name, build_study
 
 def parse_args():
     parser = argparse.ArgumentParser()
-
-    # CHANGED: four config flags replacing config_pipeline + config_train.
     parser.add_argument("--config_data",    required=True)
     parser.add_argument("--config_train",   required=True)
     parser.add_argument("--config_loss",    required=True)
@@ -47,8 +45,6 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # CHANGED: all four configs loaded and merged. search_space is attached
-    # as config["search_space"] for objective.py to consume.
     config = merge_configs_with_search_space(
         load_config(args.config_data),
         load_config(args.config_train),

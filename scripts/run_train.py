@@ -21,10 +21,8 @@ from methylvae.training.train import train
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Single BetaVAE training run.")
-
-    # CHANGED: three config flags replacing the previous two (config_pipeline +
-    # config_train). The pipeline config concept is dissolved — data, training,
-    # and loss configs are loaded and merged explicitly.
+    parser.add_argument("--name", type = str, required=True,
+                        help="Name of the project")
     parser.add_argument("--config_data",     type=str, required=True,
                         help="Path to data.yaml")
     parser.add_argument("--config_train",    type=str, required=True,
@@ -47,9 +45,6 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # CHANGED: configs are loaded and merged into a single flat dict.
-    # Previously each file was loaded separately and only one was passed
-    # to train(), leaving input_dim, paths, free_bits etc. missing.
     config = merge_configs(
         load_config(args.config_data),
         load_config(args.config_train),
@@ -62,7 +57,7 @@ def main():
     config["input_dropout"] = args.input_dropout
     config["seed"]          = args.seed
 
-    run_name = f"betavae_train_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    run_name = f"MethylVAE_{args.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     if args.verbose:
         print("=" * 60)
@@ -77,7 +72,7 @@ def main():
         print(f"Free bits:    {config['free_bits']}")
         print("=" * 60)
 
-    metrics = train(config=config, run_name=run_name, seed=config["seed"])
+    metrics = train(config = config, run_name = run_name, seed=config["seed"])
 
     if args.verbose:
         print("=" * 60)

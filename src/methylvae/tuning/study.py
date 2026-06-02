@@ -10,7 +10,9 @@ from optuna.samplers import TPESampler
 from optuna.pruners import MedianPruner
 
 
-def get_or_create_study_name(experiment_dir, prefix="betaVAE_sweep"):
+def get_or_create_study_name(experiment_dir, 
+                             prefix="betaVAE_sweep", 
+                             name = "v1"):
     array_job_id = os.environ.get("SLURM_ARRAY_JOB_ID", "local")
     lockfile = os.path.join(experiment_dir, f"study_name_{array_job_id}.txt")
 
@@ -18,7 +20,7 @@ def get_or_create_study_name(experiment_dir, prefix="betaVAE_sweep"):
         with open(lockfile) as f:
             return f.read().strip()
 
-    study_name = f"{prefix}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    study_name = f"{prefix}_{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     tmp = lockfile + ".tmp"
     with open(tmp, "w") as f:

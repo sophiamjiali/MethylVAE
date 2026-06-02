@@ -1,29 +1,22 @@
 #!/bin/bash
-# ==============================================================================
-# Script:           train.slurm
-# Purpose:          Single BetaVAE training run (fixed config)
-# ==============================================================================
-
-#SBATCH --job-name=betavae_train
-#SBATCH --output=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.out
-#SBATCH --error=/ddn_exa/campbell/sli/methylcdm-project/logs/train/%x_%j.err
-#SBATCH --time=24:00:00
-#SBATCH --partition=gpu
-#SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
+#SBATCH --output=/cluster/home/t144807uhn/logs/MethylVAE/train/%x/%x_%j.out
+#SBATCH --error=/cluster/home/t144807uhn/logs/MethylVAE/train/%x/%x_%j.err
+#SBATCH --time=12:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=24G
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=sophiamjia.li@mail.utoronto.ca
 
-# ------------------------------------------------------------------------------
-# Environment
-# ------------------------------------------------------------------------------
+# Make the project-specific logs directory
+mkdir -p /cluster/home/t144807uhn/logs/MethylVAE/train/$1
 
-source ~/miniforge3/etc/profile.d/conda.sh
-conda activate methylcdm-env
+# Activate the virtual environment
+module load python3/3.12.11
+source /cluster/home/t144807uhn/envs/methylvae-env/bin/activate
 
-cd /ddn_exa/campbell/sli/methylcdm-project
-
-mkdir -p logs/train
+# Ensure that all commands resolve back to the proper root directory
+cd /cluster/home/t144807uhn/MethylVAE
 
 # Avoid PyTorch Lightning SLURM mis-detection issues
 unset SLURM_NTASKS
@@ -31,6 +24,7 @@ unset SLURM_JOB_NAME
 
 echo "=========================================="
 echo "Job ID:     $SLURM_JOB_ID"
+echo "Job Name:   $1"
 echo "Node:       $SLURMD_NODENAME"
 echo "GPU:        $CUDA_VISIBLE_DEVICES"
 echo "Start:      $(date)"
@@ -38,26 +32,18 @@ echo "=========================================="
 
 nvidia-smi
 
-# ------------------------------------------------------------------------------
-# Experiment tracking
-# ------------------------------------------------------------------------------
-
-export WANDB_PROJECT="MethylCDM-BetaVAE"
-# export WANDB_MODE=offline
-
-# ------------------------------------------------------------------------------
-# Execution
-# ------------------------------------------------------------------------------
+export WANDB_PROJECT="MethylVAE-train"
 
 srun python scripts/run_train.py \
-    --config_pipeline pipeline.yaml \
-    --config_train betaVAE_train.yaml \
+    --name $1 \
+    --config_data data.yaml \
+    --config_train train.yaml \
+    --config_loss loss.yaml \
+    --latent_dim 128 \
+    --encoder_dims 2048 512 128 \
+    --input_dropout 0.1 \
     --seed 42 \
     --verbose
-
-# ------------------------------------------------------------------------------
-# Finish
-# ------------------------------------------------------------------------------
 
 echo "=========================================="
 echo "End: $(date)"
