@@ -1,12 +1,12 @@
 seed: 42
 
 project:
-  name: beta_vae_methylation
-  root_dir: /Users/sophiali/Desktop/MethylVAE
+  name: MethylVAE
+  root_dir: /cluster/home/t144807uhn/MethylVAE
 
 paths:
-  data_dir: data/
-  experiment_dir: experiments/
-  checkpoint_dir: checkpoints/
+  data_dir: /cluster/home/t144807uhn/data/cohorts/pancancer_v1/
+  experiment_dir: /cluster/home/t144807uhn/experiments/
+  checkpoint_dir: /cluster/home/t144807uhn/checkpoints/
 
 device:

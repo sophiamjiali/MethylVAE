@@ -17,7 +17,7 @@ import torch.nn.functional as F
 from warmup_scheduler import GradualWarmupScheduler
 from pytorch_lightning.loggers import WandbLogger
 from torch import Tensor
-from typing import cast, Any
+from typing import cast
 
 from methylvae.models.encoder import MethylEncoder
 from methylvae.models.decoder import MethylDecoder
