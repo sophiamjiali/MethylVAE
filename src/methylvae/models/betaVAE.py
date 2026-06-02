@@ -10,12 +10,12 @@ import math
 import torch
 import wandb
 
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 import torch.nn as nn
 import torch.nn.functional as F
 
 from warmup_scheduler import GradualWarmupScheduler
-from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch.loggers import WandbLogger
 from torch import Tensor
 from typing import cast
 

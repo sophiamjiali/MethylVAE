@@ -9,7 +9,7 @@
 # All keys are documented in config.py _MERGE_MAP and merge_configs().
 # ==============================================================================
 
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 
 from pathlib import Path
 from typing import Dict
@@ -119,7 +119,7 @@ def train(config: Dict,
         gradient_clip_val = config.get("gradient_clip_val", 1.0),
     )
 
-    trainer.fit(model, datamodule)
+    trainer.fit(model, datamodule = datamodule)
     return trainer.callback_metrics
 
 # [END]

@@ -6,9 +6,8 @@
 # Date:             01/01/2026
 # ==============================================================================
 
-import os
 import wandb
-from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch.loggers import WandbLogger
 
 
 def configure_loggers(trial = None, study_name = None):
