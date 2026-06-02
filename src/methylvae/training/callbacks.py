@@ -45,9 +45,9 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
     early_stop_callback = EarlyStopping(
         monitor   = "val_loss",
         mode      = "min",
-        patience  = early_stopping_patience,
-        min_delta = early_stopping_min_delta,
-        strict = True
+        patience  = int(early_stopping_patience),
+        min_delta = float(early_stopping_min_delta),
+        strict = False
     )
     early_stop_callback.best_score = float('inf')
 
