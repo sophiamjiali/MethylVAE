@@ -202,11 +202,10 @@ class BetaVAE(pl.LightningModule):
 
         self.log(
             "val_loss",
-            losses["total_loss"],
+            losses["total_loss"].detach().float().mean().item(),
             prog_bar=True,
             on_epoch=True,
-            sync_dist=False,
-            reduce_fx="mean"
+            sync_dist=False
         )
         self.log('val_recon',      losses['reconstruction_loss'])
         self.log('val_kl',         losses['kl_loss'])
