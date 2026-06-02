@@ -22,6 +22,9 @@ cd /cluster/home/t144807uhn/MethylVAE
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
 
+export CUDA_VISIBLE_DEVICES=""
+export PYTORCH_ENABLE_MPS_FALLBACK=0
+
 echo "=========================================="
 echo "Job ID:     $SLURM_JOB_ID"
 echo "Job Name:   $1"
@@ -29,8 +32,6 @@ echo "Node:       $SLURMD_NODENAME"
 echo "GPU:        $CUDA_VISIBLE_DEVICES"
 echo "Start:      $(date)"
 echo "=========================================="
-
-nvidia-smi
 
 export WANDB_PROJECT="MethylVAE-train"
 

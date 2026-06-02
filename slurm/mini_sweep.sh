@@ -26,14 +26,15 @@ echo "GPU:                $CUDA_VISIBLE_DEVICES"
 echo "Start time:         $(date)"
 echo "=========================================="
 
-nvidia-smi
-
 export WANDB_PROJECT="MethylVAE-mini"
 
 export OPTUNA_SQLITE_TIMEOUT=300
 
 unset SLURM_NTASKS
 unset SLURM_JOB_NAME
+
+export CUDA_VISIBLE_DEVICES=""
+export PYTORCH_ENABLE_MPS_FALLBACK=0
 
 CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/mini/$1
 
