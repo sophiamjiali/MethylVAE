@@ -262,22 +262,19 @@ class BetaVAE(pl.LightningModule):
         Warm-up covers the first 5% of training steps.
         """
 
-        total_steps = max(1, self.trainer.estimated_stepping_batches)
-        warmup_steps = max(1, int(0.05 * total_steps))
-
         # Initialize the Adam Optimizer
         optimizer = torch.optim.Adam(self.parameters(), lr = self.hparams['lr'])
 
         # Initialize the Cosine Annealing Scheduler
         cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max = int(total_steps)
+            optimizer, T_max = 10000
         )
 
         # Initialize the Warm-up Scheduler
         scheduler = GradualWarmupScheduler(
             optimizer, 
             multiplier      = 1, 
-            total_epoch     = warmup_steps, 
+            total_epoch     = 10, 
             after_scheduler = cosine_scheduler
         )
 
