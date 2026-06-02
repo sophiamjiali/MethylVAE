@@ -62,7 +62,7 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
 
     if trial is not None:
         pruning_callback = PyTorchLightningPruningCallback(
-            trial = trial, monitor = "val_recon"
+            trial = trial, monitor = "val_loss"
         )
         callbacks.append(pruning_callback)
 

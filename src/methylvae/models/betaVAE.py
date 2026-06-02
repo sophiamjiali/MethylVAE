@@ -200,9 +200,7 @@ class BetaVAE(pl.LightningModule):
         x_hat, mu, logvar = self(x)
         losses = self.compute_loss(x, x_hat, mu, logvar)
 
-        val_loss = losses['total_loss'].detach().mean().item()
-
-        self.log('val_loss',       val_loss, prog_bar = True)
+        self.log("val_loss", losses["total_loss"], prog_bar=True)
         self.log('val_recon',      losses['reconstruction_loss'])
         self.log('val_kl',         losses['kl_loss'])
         self.log('val_kl_per_dim', losses['kl_loss'] 
@@ -214,9 +212,8 @@ class BetaVAE(pl.LightningModule):
             'mu': mu.detach(),
             'logvar': logvar.detach()
         })
-        assert isinstance(val_loss, float), f"val_loss must be a float, got {type(val_loss)}"
         
-        return losses['total_loss'].detach()
+        return losses['total_loss']
     
 
     def test_step(self, batch, batch_idx):

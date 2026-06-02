@@ -99,8 +99,8 @@ def train(config: Dict,
     callbacks = configure_callbacks(
         trial                    = trial,
         checkpoint_dir           = str(checkpoint_dir),
-        early_stopping_patience  = config.get("early_stopping_patience", 20),
-        early_stopping_min_delta = config.get("early_stopping_min_delta", 1e-5),
+        early_stopping_patience = int(config.get("early_stopping_patience", 20)),
+        early_stopping_min_delta = float(config.get("early_stopping_min_delta", 1e-5)),
     )
     logger = configure_loggers(trial=trial, study_name=study_name or run_name)[0]
 
