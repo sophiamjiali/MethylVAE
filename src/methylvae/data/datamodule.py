@@ -41,7 +41,8 @@ class MethylDataModule(pl.LightningDataModule):
         self.test_dataset = MethylDataset(test_adata)
 
     def train_dataloader(self):
-        assert hasattr(self, "train_dataset")
+        if not hasattr(self, "train_dataset"):
+            self.setup()
         return DataLoader(
             self.train_dataset,
             batch_size = self.batch_size,
@@ -52,7 +53,8 @@ class MethylDataModule(pl.LightningDataModule):
         )
     
     def val_dataloader(self):
-        assert hasattr(self, "val_dataset")
+        if not hasattr(self, "val_dataset"):
+            self.setup()
         return DataLoader(
             self.val_dataset,
             batch_size = self.batch_size,
@@ -63,7 +65,8 @@ class MethylDataModule(pl.LightningDataModule):
         )
     
     def test_dataloader(self):
-        assert hasattr(self, "test_dataset")
+        if not hasattr(self, "test_dataset"):
+            self.setup()
         return DataLoader(
             self.test_dataset,
             batch_size = self.batch_size,
