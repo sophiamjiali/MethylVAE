@@ -43,7 +43,7 @@ def configure_callbacks(trial = None,
         monitor   = "val_loss",
         patience  = early_stopping_patience,
         min_delta = early_stopping_min_delta,
-        mode      = "min"
+        mode      = "min",
         check_on_train_epoch_end = False
     )
 
