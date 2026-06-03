@@ -48,7 +48,8 @@ srun python scripts/run_train.py \
     --seed 42 \
     --verbose
 
-wandb sync --recursive $WANDB_DIR
+echo "Training finished. Starting W&B sync..."
+find "$WANDB_DIR" -type d -name "wandb" -exec wandb sync {} \;
 
 echo "=========================================="
 echo "End: $(date)"

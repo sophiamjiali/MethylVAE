@@ -27,6 +27,8 @@ echo "Start time:         $(date)"
 echo "=========================================="
 
 export WANDB_PROJECT="MethylVAE-mini"
+export WANDB_MODE=offline
+export WANDB_DIR="/cluster/home/t144807uhn/wandb/mini/$1"
 
 export OPTUNA_SQLITE_TIMEOUT=300
 
@@ -42,6 +44,9 @@ srun python scripts/sweeps/run_mini_sweep.py \
     --name "$1" \
     --config_dir $CONFIG_PATH \
     --trial_seed 42
+
+echo "Training finished. Starting W&B sync..."
+find "$WANDB_DIR" -type d -name "wandb" -exec wandb sync {} \;
 
 echo "=========================================="
 echo "End time: $(date)"

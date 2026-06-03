@@ -28,6 +28,8 @@ echo "Start:          $(date)"
 echo "=========================================="
 
 export WANDB_PROJECT="MethylVAE-full"
+export WANDB_MODE=offline
+export WANDB_DIR="/cluster/home/t144807uhn/wandb/full/$1"
 
 export OPTUNA_SQLITE_TIMEOUT=300
 
@@ -47,6 +49,9 @@ srun python scripts/sweeps/run_full_sweep.py \
     --config_search "${CONFIG_PATH}/search_space.yaml" \
     --trial_seed 42 \
     --verbose
+
+echo "Training finished. Starting W&B sync..."
+find "$WANDB_DIR" -type d -name "wandb" -exec wandb sync {} \;
 
 echo "=========================================="
 echo "End: $(date)"
