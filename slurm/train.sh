@@ -50,7 +50,7 @@ srun python scripts/run_train.py \
     --seed 42 \
     --verbose
 
-wandb sync $WANDB_DIR
+wandb sync --recursive $WANDB_DIR
 
 echo "=========================================="
 echo "End: $(date)"
