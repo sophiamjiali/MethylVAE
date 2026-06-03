@@ -33,9 +33,11 @@ echo "GPU:        $CUDA_VISIBLE_DEVICES"
 echo "Start:      $(date)"
 echo "=========================================="
 
+# Create a temporary WandB directory to offline sync after training
 export WANDB_PROJECT="MethylVAE-train"
 export WANDB_MODE=offline
-export WANDB_DIR="/cluster/home/t144807uhn/wandb/train/$1"
+export WANDB_DIR="/cluster/home/t144807uhn/tmp/train/$1/wandb"
+mkdir -p "$WANDB_DIR"
 
 CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/train/$1
 
@@ -48,8 +50,16 @@ srun python scripts/run_train.py \
     --seed 42 \
     --verbose
 
-echo "Training finished. Starting W&B sync..."
-find "$WANDB_DIR" -type d -name "wandb" -exec wandb sync {} \;
+(
+  echo "Syncing logs to W&B..."
+  find "$WANDB_DIR" -type d -name "offline-run-*" -exec wandb sync {} \;
+) && (
+  echo "Sync successful. Deleting temporary local logs."
+  rm -rf "/cluster/home/t144807uhn/tmp/train/$1/wandb"
+) || (
+  echo "Sync failed! Keeping local logs for safety."
+  exit 1
+)
 
 echo "=========================================="
 echo "End: $(date)"
