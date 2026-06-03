@@ -40,10 +40,7 @@ CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/mini/$1
 
 srun python scripts/sweeps/run_mini_sweep.py \
     --name "$1" \
-    --config_data "${CONFIG_PATH}/data.yaml" \
-    --config_train "${CONFIG_PATH}/train.yaml" \
-    --config_loss "${CONFIG_PATH}/loss.yaml" \
-    --config_search "${CONFIG_PATH}/search_space.yaml" \
+    --config_dir $CONFIG_PATH \
     --trial_seed 42
 
 echo "=========================================="

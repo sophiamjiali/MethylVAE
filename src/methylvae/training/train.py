@@ -82,7 +82,7 @@ def train(config: Dict,
 
     # --- Checkpoint directory -------------------------------------------------
 
-    checkpoint_dir = config.get("checkpoint_dir", "")
+    checkpoint_dir = config["paths.checkpoint_dir"]
     if trial is not None and study_name is not None:
         checkpoint_dir = Path(checkpoint_dir) / study_name / f"trial_{trial.number}"
     else:

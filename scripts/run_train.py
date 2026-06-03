@@ -23,12 +23,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Single BetaVAE training run.")
     parser.add_argument("--name", type = str, required=True,
                         help="Name of the project")
-    parser.add_argument("--config_data",     type=str, required=True,
-                        help="Path to data.yaml")
-    parser.add_argument("--config_train",    type=str, required=True,
-                        help="Path to training.yaml")
-    parser.add_argument("--config_loss",     type=str, required=True,
-                        help="Path to loss.yaml")
+    parser.add_argument("--config_dir",     type=str, required=True,
+                        help="Path to configurations directory")
 
     # Fixed single-run hyperparameters not covered by the YAMLs
     parser.add_argument("--latent_dim",      type=int,   default=128)
@@ -45,10 +41,12 @@ def parse_args():
 def main():
     args = parse_args()
 
+    # Resolve the configuration paths
     config = merge_configs(
-        load_config(args.config_data),
-        load_config(args.config_train),
-        load_config(args.config_loss),
+        load_config(args.config_dir / "base.yaml"),
+        load_config(args.config_dir / "data.yaml"),
+        load_config(args.config_dir / "loss.yaml"),
+        load_config(args.config_dir / "train.yaml")
     )
 
     # Inject single-run architectural choices (swept in sweeps, fixed here)

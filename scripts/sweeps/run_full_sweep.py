@@ -27,11 +27,7 @@ from methylvae.tuning.study import get_or_create_study_name, build_study
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name",           required=True)
-    parser.add_argument("--config_data",    required=True)
-    parser.add_argument("--config_train",   required=True)
-    parser.add_argument("--config_loss",    required=True)
-    parser.add_argument("--config_search",  required=True,
-                        help="Path to search_space.yaml")
+    parser.add_argument("--config_dir",     required=True)
 
     parser.add_argument("--trial_seed",        type=int,  default=0)
     parser.add_argument("--n_startup_trials",  type=int,  default=10)
@@ -43,13 +39,15 @@ def parse_args():
 
 def main():
     args = parse_args()
-    config = merge_configs_with_search_space(
-        load_config(args.config_data),
-        load_config(args.config_train),
-        load_config(args.config_loss),
-        search_space=load_config(args.config_search),
-    )
 
+    config = merge_configs_with_search_space(
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/data.yaml"),
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/train.yaml"),
+        search_space=load_config(f"{args.config_dir}/search_space.yaml")
+    )
+    
     experiment_dir = config.get("experiment_dir", "")
     Path(experiment_dir).mkdir(parents=True, exist_ok=True) 
 

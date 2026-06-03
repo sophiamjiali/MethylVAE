@@ -19,8 +19,7 @@ from pathlib import Path
 
 from methylvae.utils.config import (
     load_config, 
-    merge_configs_with_search_space, 
-    resolve_path
+    merge_configs_with_search_space
 )
 from methylvae.training.objective import objective
 from methylvae.tuning.study import get_or_create_study_name, build_study
@@ -29,19 +28,17 @@ from methylvae.tuning.study import get_or_create_study_name, build_study
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name",           required=True)
-    parser.add_argument("--config_data",    required=True)
-    parser.add_argument("--config_train",   required=True)
-    parser.add_argument("--config_loss",    required=True)
-    parser.add_argument("--config_search",  required=True)
+    parser.add_argument("--config_dir",     required=True)
     parser.add_argument("--trial_seed",     type=int, default=0)
 
     args = parser.parse_args()
 
     config = merge_configs_with_search_space(
-        load_config(args.config_data),
-        load_config(args.config_train),
-        load_config(args.config_loss),
-        search_space=load_config(args.config_search),
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/data.yaml"),
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/train.yaml"),
+        search_space=load_config(f"{args.config_dir}/search_space.yaml")
     )
 
     experiment_dir = config.get("experiment_dir", "")
