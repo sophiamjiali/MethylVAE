@@ -47,8 +47,8 @@ def main():
         load_config(f"{args.config_dir}/train.yaml"),
         search_space=load_config(f"{args.config_dir}/search_space.yaml")
     )
-    
-    experiment_dir = config.get("experiment_dir", "")
+
+    experiment_dir = config["paths.experiment_dir"]
     Path(experiment_dir).mkdir(parents=True, exist_ok=True) 
 
     study_name = get_or_create_study_name(
