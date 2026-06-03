@@ -6,8 +6,9 @@
 # Date:             01/01/2026
 # ==============================================================================
 
-from typing import Optional, Any
+from typing import Optional
 import optuna
+import torch
 
 from optuna.integration import PyTorchLightningPruningCallback
 import lightning.pytorch as pl
@@ -50,7 +51,7 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
         strict = False,
         check_finite = True
     )
-    early_stop_callback.best_score = float('inf')
+    early_stop_callback.best_score = torch.tensor(float('inf'))
 
     lr_monitor = LearningRateMonitor(logging_interval="step")
 

@@ -1,0 +1,12 @@
+seed: 42
+
+project:
+  name: MethylVAE
+  root_dir: /Users/sophiali/Desktop/MethylVAE
+
+paths:
+  data_dir: /Users/sophiali/Desktop/MethylVAE/data
+  experiment_dir: /Users/sophiali/Desktop/MethylVAE/experiments
+  checkpoint_dir: /Users/sophiali/Desktop/MethylVAE/checkpoints
+
+device: cpu

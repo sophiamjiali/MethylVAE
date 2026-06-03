@@ -1,0 +1,16 @@
+# ==============================================================================
+# Config:       data.yaml
+# Purpose:      Data paths and input dimensionality
+# ==============================================================================
+
+# Number of CpG probes after MAD filtering and preprocessing
+input_dim: 30000
+
+# AnnData split paths (M-values, winsorized, scaled to [-1, 1])
+train_adata_path: /Users/sophiali/Desktop/MethylVAE/data/train_adata.h5ad
+val_adata_path:   /Users/sophiali/Desktop/MethylVAE/data/val_adata.h5ad
+test_adata_path:  /Users/sophiali/Desktop/MethylVAE/data/test_adata.h5ad
+
+num_workers: 4
+
+# [END]
