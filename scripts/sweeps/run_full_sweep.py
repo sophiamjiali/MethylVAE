@@ -19,9 +19,8 @@
 import argparse
 from pathlib import Path
 
-from methylvae.utils.config import load_config, merge_configs_with_search_space, resolve_path
+from methylvae.utils.config import load_config, merge_configs_with_search_space
 from methylvae.training.objective import objective
-from methylvae.constants import BETAVAE_SWEEP_DIR
 from methylvae.tuning.study import get_or_create_study_name, build_study
 
 
@@ -51,12 +50,8 @@ def main():
         search_space=load_config(args.config_search),
     )
 
-    experiment_dir = resolve_path(
-        config.get("experiment_dir", ""),
-        BETAVAE_SWEEP_DIR,
-        build_path=True,
-    )
-    Path(experiment_dir).mkdir(parents=True, exist_ok=True)
+    experiment_dir = config.get("experiment_dir", "")
+    Path(experiment_dir).mkdir(parents=True, exist_ok=True) 
 
     study_name = get_or_create_study_name(
         experiment_dir, 

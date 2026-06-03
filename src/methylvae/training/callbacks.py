@@ -40,7 +40,7 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
         mode              = "min",
         save_top_k        = 1,
         save_last         = True,
-        save_weights_only = True,
+        save_weights_only = False,
     )
 
     early_stop_callback = EarlyStopping(

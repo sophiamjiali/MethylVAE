@@ -9,4 +9,4 @@ paths:
   experiment_dir: /cluster/home/t144807uhn/experiments/
   checkpoint_dir: /cluster/home/t144807uhn/checkpoints/
 
-device:
+device: cpu

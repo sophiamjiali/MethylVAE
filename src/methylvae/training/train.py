@@ -19,7 +19,6 @@ from methylvae.models.betaVAE import BetaVAE
 from methylvae.training.callbacks import configure_callbacks
 from methylvae.logging.logger import configure_loggers
 from methylvae.utils.config import resolve_path
-from methylvae.constants import BETAVAE_CHECKPOINT_DIR
 
 
 def train(config: Dict,
@@ -83,10 +82,7 @@ def train(config: Dict,
 
     # --- Checkpoint directory -------------------------------------------------
 
-    checkpoint_dir = resolve_path(
-        config.get("checkpoint_dir", ""), BETAVAE_CHECKPOINT_DIR
-    )
-
+    checkpoint_dir = config.get("checkpoint_dir", "")
     if trial is not None and study_name is not None:
         checkpoint_dir = Path(checkpoint_dir) / study_name / f"trial_{trial.number}"
     else:
@@ -110,13 +106,15 @@ def train(config: Dict,
         max_epochs        = config["max_epochs"],
         callbacks         = callbacks,
         logger            = logger,
-        accelerator       = "auto",
+        accelerator       = "cpu",
         devices           = 1,
         num_nodes         = 1,
         strategy          = "auto",
         deterministic     = False,
         log_every_n_steps = 1,
         gradient_clip_val = config.get("gradient_clip_val", 1.0),
+        check_val_every_n_epoch = 1,
+        enable_checkpointing = True
     )
 
     trainer.fit(model, datamodule = datamodule)
