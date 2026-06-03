@@ -45,7 +45,7 @@ def main():
     config = merge_configs(
         load_config(f"{args.config_dir}/base.yaml"),
         load_config(f"{args.config_dir}/data.yaml"),
-        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/loss.yaml"),
         load_config(f"{args.config_dir}/train.yaml"),
     )
 
