@@ -43,10 +43,10 @@ def main():
 
     # Resolve the configuration paths
     config = merge_configs(
-        load_config(args.config_dir / "base.yaml"),
-        load_config(args.config_dir / "data.yaml"),
-        load_config(args.config_dir / "loss.yaml"),
-        load_config(args.config_dir / "train.yaml")
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/data.yaml"),
+        load_config(f"{args.config_dir}/base.yaml"),
+        load_config(f"{args.config_dir}/train.yaml"),
     )
 
     # Inject single-run architectural choices (swept in sweeps, fixed here)
