@@ -58,7 +58,7 @@ def main():
     )
 
     study.optimize(
-        lambda trial: objective(trial, study_name, config),
+        lambda trial: objective(trial, study_name, config, mini = True),
         n_trials = 10,
     )
 

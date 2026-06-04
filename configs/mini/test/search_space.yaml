@@ -10,7 +10,7 @@ early_stopping:
   patience: 20
   min_delta: 1e-5
 
-encoder_dims: [1024, 512, 256, 128]
+encoder_dims: [1024, 512, 256, 128] # fixed
 
 latent_dim: [128, 256]   # suggest_int; samples integers in [128, 256]
 
@@ -18,10 +18,10 @@ beta: [0.001, 0.02]      # suggest_float, log=True
 
 lr: [0.0001, 0.01]       # suggest_float, log=True
 
-input_dropout: 0.1  # suggest_float, uniform
+input_dropout: 0.1  # fixed
 
-num_cycles: 2
+num_cycles: 2 # fixed
 
-batch_size: 256
+batch_size: 256 # fixed
 
 # [END]

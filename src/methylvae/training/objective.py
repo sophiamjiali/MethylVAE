@@ -14,7 +14,7 @@ import wandb
 from methylvae.training.train import train
 
 
-def objective(trial, study_name: str, config: dict):
+def objective(trial, study_name: str, config: dict, mini: bool = False):
     """
     Optuna objective for one hyperparameter trial.
 
@@ -47,22 +47,28 @@ def objective(trial, study_name: str, config: dict):
         trial_config["lr"] = trial.suggest_float(
             "lr", *search_space["lr"], log=True
         )
-        trial_config["input_dropout"] = trial.suggest_float(
-            "input_dropout", *search_space["input_dropout"]
-        )
-        trial_config["num_cycles"] = trial.suggest_categorical(
-            "num_cycles", search_space["num_cycles"]
-        )
-        trial_config["batch_size"] = trial.suggest_categorical(
-            "batch_size", search_space["batch_size"]
-        )
 
-        # Encoder architecture indexed categorically
-        encoder_idx = trial.suggest_categorical(
-            "encoder_dims_idx",
-            list(range(len(search_space["encoder_dims"])))
-        )
-        trial_config["encoder_dims"] = search_space["encoder_dims"][encoder_idx]
+        if mini:
+            trial_config['encoder_dims'] = search_space['encoder_dims']
+            trial_config["num_cycles"] = search_space['num_cycles']
+            trial_config["batch_size"] = search_space['batch_size']
+            trial_config["input_dropout"] = search_space['input_dropout']
+        else:
+
+            encoder_idx = trial.suggest_categorical(
+                "encoder_dims_idx",
+                list(range(len(search_space["encoder_dims"])))
+            )
+            trial_config["encoder_dims"] = search_space["encoder_dims"][encoder_idx]
+            trial_config["num_cycles"] = trial.suggest_categorical(
+                "num_cycles", search_space["num_cycles"]
+            )
+            trial_config["batch_size"] = trial.suggest_categorical(
+                "batch_size", search_space["batch_size"]
+            )
+            trial_config["input_dropout"] = trial.suggest_float(
+                "input_dropout", *search_space["input_dropout"]
+            )
 
         # --- Training ---------------------------------------------------------
 
