@@ -110,22 +110,20 @@ class BetaVAE(pl.LightningModule):
 
         Sweep num_cycles ∈ [2, 4], beta_max ∈ [0.001, 0.005, 0.01].
         """
-        
-        total_steps = max(1, self.trainer.estimated_stepping_batches)
-        cycle_len   = total_steps / self.hparams['num_cycles']
-        
-        # Position within the current cycle [0, 1)
-        cycle_pos   = (self.global_step % math.ceil(cycle_len)) / cycle_len
-        
-        # Linear ramp for first half of cycle, hold at max for second half
-        annealed    = min(1.0, cycle_pos * 2.0)
 
-        # Log the position in the cyclic annealing schedule
-        cycle_pos = (self.global_step % math.ceil(cycle_len)) / cycle_len
-        self.log('cycle_pos', cycle_pos)
-        self.log('cycle_len', cycle_len)
-        self.log('beta_annealed', self.hparams['beta'] * min(1.0, cycle_pos * 2.0))
-        
+        if not hasattr(self, '_total_steps'):
+            max_epochs = self.trainer.max_epochs or self.hparams['max_epochs']
+            steps_per_epoch = math.ceil(self.trainer.num_training_batches)
+            self._total_steps = steps_per_epoch * max_epochs
+    
+        cycle_len = self._total_steps / self.hparams['num_cycles']
+
+        # Position within the current cycle [0, 1)
+        cycle_pos = (self.global_step % int(cycle_len)) / cycle_len
+
+        # Linear ramp for first half of cycle, hold at max for second half
+        annealed  = min(1.0, cycle_pos * 2.0)
+    
         return self.hparams['beta'] * annealed
 
     # -------------------------------------------------------------------------
