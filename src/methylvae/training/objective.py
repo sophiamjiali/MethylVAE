@@ -51,8 +51,8 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         trial_config['max_epochs'] = search_space['max_epochs']
         trial_config['gradient_clip_val'] = search_space['gradient_clip_val']
         trial_config['n_startup_trials'] = search_space['n_startup_trials']
-        trial_config['early_stopping_patience'] = search_space['early_stopping_patience']
-        trial_config['early_stopping_min_delta'] = search_space['early_stopping_min_delta']
+        trial_config['early_stopping_patience'] = search_space['early_stopping']['patience']
+        trial_config['early_stopping_min_delta'] = search_space['early_stopping']['min_delta']
 
         if mini:
             trial_config['encoder_dims'] = search_space['encoder_dims']
