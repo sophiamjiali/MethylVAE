@@ -53,7 +53,7 @@ def main():
     study = build_study(
         storage          = storage,
         study_name       = study_name,
-        n_startup_trials = args.n_startup_trials,
+        n_startup_trials = config['search_space.n_startup_trials'],
         seed             = args.trial_seed,
     )
 
