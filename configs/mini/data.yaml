@@ -1,0 +1,17 @@
+# ==============================================================================
+# Config:       data.yaml
+# Purpose:      Data paths and input dimensionality
+# ==============================================================================
+
+# Number of CpG probes after MAD filtering and preprocessing
+input_dim: 30000
+
+# AnnData split paths (M-values, winsorized, scaled to [-1, 1])
+train_adata_path: /cluster/home/t144807uhn/data/cohorts/pancancer_v1/pancancer_v1_train_adata.h5ad
+val_adata_path:   /cluster/home/t144807uhn/data/cohorts/pancancer_v1/pancancer_v1_val_adata.h5ad
+test_adata_path:  /cluster/home/t144807uhn/data/cohorts/pancancer_v1/pancancer_v1_test_adata.h5ad
+
+# DataLoader
+num_workers: 4
+
+# [END]

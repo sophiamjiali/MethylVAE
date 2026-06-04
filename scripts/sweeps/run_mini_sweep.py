@@ -37,7 +37,6 @@ def main():
         load_config(f"{args.config_dir}/base.yaml"),
         load_config(f"{args.config_dir}/data.yaml"),
         load_config(f"{args.config_dir}/loss.yaml"),
-        load_config(f"{args.config_dir}/train.yaml"),
         search_space=load_config(f"{args.config_dir}/search_space.yaml")
     )
 
@@ -54,7 +53,7 @@ def main():
     study = build_study(
         storage          = storage,
         study_name       = study_name,
-        n_startup_trials = 3,
+        n_startup_trials = args.n_startup_trials,
         seed             = args.trial_seed,
     )
 

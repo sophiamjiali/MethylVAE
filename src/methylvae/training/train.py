@@ -18,7 +18,6 @@ from methylvae.data.datamodule import MethylDataModule
 from methylvae.models.betaVAE import BetaVAE
 from methylvae.training.callbacks import configure_callbacks
 from methylvae.logging.logger import configure_loggers
-from methylvae.utils.config import resolve_path
 
 
 def train(config: Dict,

@@ -28,11 +28,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name",           required=True)
     parser.add_argument("--config_dir",     required=True)
-
     parser.add_argument("--trial_seed",        type=int,  default=0)
-    parser.add_argument("--n_startup_trials",  type=int,  default=10)
-    parser.add_argument("--report_only",       action="store_true")
-    parser.add_argument("--verbose",           action="store_true")
 
     return parser.parse_args()
 
