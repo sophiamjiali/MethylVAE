@@ -119,6 +119,12 @@ class BetaVAE(pl.LightningModule):
         
         # Linear ramp for first half of cycle, hold at max for second half
         annealed    = min(1.0, cycle_pos * 2.0)
+
+        # Log the position in the cyclic annealing schedule
+        cycle_pos = (self.global_step % math.ceil(cycle_len)) / cycle_len
+        self.log('cycle_pos', cycle_pos)
+        self.log('cycle_len', cycle_len)
+        self.log('beta_annealed', self.hparams['beta'] * min(1.0, cycle_pos * 2.0))
         
         return self.hparams['beta'] * annealed
 
