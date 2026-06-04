@@ -28,7 +28,7 @@ echo "=========================================="
 
 export WANDB_PROJECT="MethylVAE-mini"
 export WANDB_MODE=offline
-export WANDB_DIR="/cluster/home/t144807uhn/tmp/mini/$1/wandb"
+export WANDB_DIR="/cluster/home/t144807uhn/tmp/mini/$1"
 mkdir -p "$WANDB_DIR"
 
 export OPTUNA_SQLITE_TIMEOUT=300
@@ -45,17 +45,6 @@ srun python scripts/sweeps/run_mini_sweep.py \
     --name "$1" \
     --config_dir $CONFIG_PATH \
     --trial_seed 42
-
-(
-  echo "Syncing logs to W&B..."
-  find "$WANDB_DIR" -type d -name "offline-run-*" -exec wandb sync {} \;
-) && (
-  echo "Sync successful. Deleting temporary local logs."
-  rm -rf "/cluster/home/t144807uhn/tmp/mini/$1/wandb"
-) || (
-  echo "Sync failed! Keeping local logs for safety."
-  exit 1
-)
 
 echo "=========================================="
 echo "End time: $(date)"

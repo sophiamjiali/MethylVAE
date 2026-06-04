@@ -29,7 +29,7 @@ echo "=========================================="
 
 export WANDB_PROJECT="MethylVAE-full"
 export WANDB_MODE=offline
-export WANDB_DIR="/cluster/home/t144807uhn/tmp/full/$1/wandb"
+export WANDB_DIR="/cluster/home/t144807uhn/tmp/full/$1"
 mkdir -p "$WANDB_DIR"
 
 export OPTUNA_SQLITE_TIMEOUT=300
@@ -50,18 +50,6 @@ srun python scripts/sweeps/run_full_sweep.py \
     --config_search "${CONFIG_PATH}/search_space.yaml" \
     --trial_seed 42 \
     --verbose
-
-(
-  echo "Syncing logs to W&B..."
-  find "$WANDB_DIR" -type d -name "offline-run-*" -exec wandb sync {} \;
-) && (
-  echo "Sync successful. Deleting temporary local logs."
-  rm -rf "/cluster/home/t144807uhn/tmp/full/$1/wandb"
-) || (
-  echo "Sync failed! Keeping local logs for safety."
-  exit 1
-)
-
 
 echo "=========================================="
 echo "End: $(date)"

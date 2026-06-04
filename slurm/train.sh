@@ -36,7 +36,7 @@ echo "=========================================="
 # Create a temporary WandB directory to offline sync after training
 export WANDB_PROJECT="MethylVAE-train"
 export WANDB_MODE=offline
-export WANDB_DIR="/cluster/home/t144807uhn/tmp/train/$1/wandb"
+export WANDB_DIR="/cluster/home/t144807uhn/tmp/train/$1"
 mkdir -p "$WANDB_DIR"
 
 CONFIG_PATH=/cluster/home/t144807uhn/MethylVAE/configs/train/$1
@@ -49,17 +49,6 @@ srun python scripts/run_train.py \
     --input_dropout 0.1 \
     --seed 42 \
     --verbose
-
-(
-  echo "Syncing logs to W&B..."
-  find "$WANDB_DIR" -type d -name "offline-run-*" -exec wandb sync {} \;
-) && (
-  echo "Sync successful. Deleting temporary local logs."
-  rm -rf "/cluster/home/t144807uhn/tmp/train/$1/wandb"
-) || (
-  echo "Sync failed! Keeping local logs for safety."
-  exit 1
-)
 
 echo "=========================================="
 echo "End: $(date)"
