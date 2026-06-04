@@ -11,7 +11,7 @@ source "$ENV_PATH"
 echo "Starting synchronization..."
 for run_dir in $(find "$SEARCH_PATH" -type d -name "offline-run-*"); do
     echo "Syncing: $run_dir"
-    wandb sync "$run_dir"
+    wandb sync "$run_dir" && rm -rf "$run_dir"
 done
 
 echo "All syncs completed."
