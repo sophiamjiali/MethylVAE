@@ -111,11 +111,13 @@ class BetaVAE(pl.LightningModule):
         Sweep num_cycles ∈ [2, 4], beta_max ∈ [0.001, 0.005, 0.01].
         """
 
-        if not hasattr(self, '_total_steps'):
+        if not hasattr(self, '_total_steps') or self._total_steps==float('inf'):
+            num_batches = self.trainer.num_training_batches
+            if num_batches == float('inf'): return 0.0 
+
             max_epochs = self.trainer.max_epochs or self.hparams['max_epochs']
-            steps_per_epoch = math.ceil(self.trainer.num_training_batches)
-            self._total_steps = steps_per_epoch * max_epochs
-    
+            self._total_steps = math.ceil(num_batches) * max_epochs
+
         cycle_len = self._total_steps / self.hparams['num_cycles']
 
         # Position within the current cycle [0, 1)
@@ -123,7 +125,7 @@ class BetaVAE(pl.LightningModule):
 
         # Linear ramp for first half of cycle, hold at max for second half
         annealed  = min(1.0, cycle_pos * 2.0)
-    
+
         return self.hparams['beta'] * annealed
 
     # -------------------------------------------------------------------------
