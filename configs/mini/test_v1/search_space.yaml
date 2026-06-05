@@ -21,7 +21,7 @@ lr: [0.0001, 0.001]       # suggest_float, log=True
 input_dropout: 0.1  # fixed
 
 num_cycles: 4 # fixed
-%
+
 batch_size: 256 # fixed
 
 # [END]
