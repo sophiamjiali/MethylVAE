@@ -49,6 +49,7 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
         patience  = int(early_stopping_patience),
         min_delta = float(early_stopping_min_delta),
         strict = False,
+        check_on_train_epoch_end = False,
         check_finite = True
     )
     early_stop_callback.best_score = torch.tensor(float('inf'))
