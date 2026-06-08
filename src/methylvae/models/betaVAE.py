@@ -279,23 +279,31 @@ class BetaVAE(pl.LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr = self.hparams['lr'])
 
         # Initialize the Cosine Annealing Scheduler
-        cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max = 10000
+        plateau_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer,
+            mode = 'min',
+            factor = 0.5,
+            patience = 10,
+            min_lr = 1e-6
         )
+
+        # cosine_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        #     optimizer, T_max = 10000
+        # )
 
         # Initialize the Warm-up Scheduler
         scheduler = GradualWarmupScheduler(
             optimizer, 
             multiplier      = 1, 
             total_epoch     = 10, 
-            after_scheduler = cosine_scheduler
+            after_scheduler = plateau_scheduler
         )
 
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
                 "scheduler": scheduler,
-                "interval": "step",
+                "interval": "epoch",
                 "monitor": "val_loss"
             }
         }
