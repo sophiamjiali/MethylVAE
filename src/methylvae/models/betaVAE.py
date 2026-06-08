@@ -307,6 +307,11 @@ class BetaVAE(pl.LightningModule):
                 "monitor": "val_loss"
             }
         }
+    
+    def lr_scheduler_step(self, scheduler, metric):
+        if metric is None:
+            return
+        scheduler.step(metric)
 
     # -------------------------------------------------------------------------
         
