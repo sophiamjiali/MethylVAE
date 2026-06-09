@@ -36,7 +36,6 @@ def main():
     config = merge_configs_with_search_space(
         load_config(f"{args.config_dir}/base.yaml"),
         load_config(f"{args.config_dir}/data.yaml"),
-        load_config(f"{args.config_dir}/loss.yaml"),
         search_space=load_config(f"{args.config_dir}/search_space.yaml")
     )
 

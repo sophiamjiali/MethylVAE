@@ -112,6 +112,7 @@ def train(config: Dict,
         deterministic     = False,
         log_every_n_steps = 1,
         gradient_clip_val = config.get("gradient_clip_val", 1.0),
+        gradient_clip_algorithm = "norm",
         check_val_every_n_epoch = 1,
         enable_checkpointing = True
     )

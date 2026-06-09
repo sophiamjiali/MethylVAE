@@ -70,7 +70,8 @@ class BetaVAE(pl.LightningModule):
                                       encoder_dims, input_dropout)
         self.z_mu     = nn.Linear(latent_dim, latent_dim)
         self.z_logvar = nn.Linear(latent_dim, latent_dim)
-        self.decoder  = MethylDecoder(input_dim, latent_dim, decoder_dims)
+        self.decoder  = MethylDecoder(input_dim, latent_dim, 
+                                      decoder_dims, input_dropout)
 
 
         # Initialize the linear layers using Xavier Initialization
@@ -98,35 +99,35 @@ class BetaVAE(pl.LightningModule):
 
     # -------------------------------------------------------------------------
     
-    def get_beta(self) -> float:
-        """
-        Cyclical annealing schedule (Fu et al., 2019).
+    # def get_beta(self) -> float:
+    #     """
+    #     Cyclical annealing schedule (Fu et al., 2019).
 
-        Within each cycle, beta ramps linearly from 0 → beta_max over the
-        first half of the cycle, then holds at beta_max for the second half.
-        This prevents posterior collapse by periodically releasing KL pressure,
-        ensuring all latent dimensions remain active — important for a
-        downstream diffusion model that relies on a well-utilised latent space.
+    #     Within each cycle, beta ramps linearly from 0 → beta_max over the
+    #     first half of the cycle, then holds at beta_max for the second half.
+    #     This prevents posterior collapse by periodically releasing KL pressure,
+    #     ensuring all latent dimensions remain active — important for a
+    #     downstream diffusion model that relies on a well-utilised latent space.
 
-        Sweep num_cycles ∈ [2, 4], beta_max ∈ [0.001, 0.005, 0.01].
-        """
+    #     Sweep num_cycles ∈ [2, 4], beta_max ∈ [0.001, 0.005, 0.01].
+    #     """
 
-        if not hasattr(self, '_total_steps') or self._total_steps==float('inf'):
-            num_batches = self.trainer.num_training_batches
-            if num_batches == float('inf'): return 0.0 
+    #     if not hasattr(self, '_total_steps') or self._total_steps==float('inf'):
+    #         num_batches = self.trainer.num_training_batches
+    #         if num_batches == float('inf'): return 0.0 
 
-            max_epochs = self.trainer.max_epochs or self.hparams['max_epochs']
-            self._total_steps = math.ceil(num_batches) * max_epochs
+    #         max_epochs = self.trainer.max_epochs or self.hparams['max_epochs']
+    #         self._total_steps = math.ceil(num_batches) * max_epochs
 
-        cycle_len = self._total_steps / self.hparams['num_cycles']
+    #     cycle_len = self._total_steps / self.hparams['num_cycles']
 
-        # Position within the current cycle [0, 1)
-        cycle_pos = (self.global_step % int(cycle_len)) / cycle_len
+    #     # Position within the current cycle [0, 1)
+    #     cycle_pos = (self.global_step % int(cycle_len)) / cycle_len
 
-        # Linear ramp for first half of cycle, hold at max for second half
-        annealed  = min(1.0, cycle_pos * 2.0)
+    #     # Linear ramp for first half of cycle, hold at max for second half
+    #     annealed  = min(1.0, cycle_pos * 2.0)
 
-        return self.hparams['beta'] * annealed
+    #     return self.hparams['beta'] * annealed
 
     # -------------------------------------------------------------------------
     
@@ -173,14 +174,14 @@ class BetaVAE(pl.LightningModule):
  
         recon_loss = F.mse_loss(x_hat, x, reduction="mean")
         kl_loss    = self._compute_kl_loss(mu, logvar)
-        beta       = self.get_beta()
-        total_loss = recon_loss + beta * kl_loss
+        kl_weight = self.get_kl_weight()
+        total_loss = recon_loss + kl_weight * kl_loss
  
         return {
             "total_loss":          total_loss,
             "reconstruction_loss": recon_loss,
             "kl_loss":             kl_loss,
-            "beta":                beta,
+            "kl_weight":           kl_weight
         }
 
     # -------------------------------------------------------------------------
@@ -190,13 +191,23 @@ class BetaVAE(pl.LightningModule):
         x_hat, mu, logvar = self(x)
         losses = self.compute_loss(x, x_hat, mu, logvar)
 
-        self.log('train_loss',       losses['total_loss'], prog_bar = True)
-        self.log('train_recon',      losses['reconstruction_loss'])
-        self.log('train_kl',         losses['kl_loss'])
-        self.log('train_kl_per_dim', losses['kl_loss'] 
-                 / self.hparams['latent_dim'])
-        self.log('beta',             losses['beta'])
-        self.log('train_post_var',   logvar.exp().mean())
+        # Compute reconstruction quality
+        r2 = self._compute_r2(x, x_hat)
+
+        # Compute latent space activity
+        kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
+        active_units = (kl_per_dim.mean(dim = 0) > 0.1).sum()
+
+        self.log('train_loss',        losses['total_loss'])
+        self.log('train_recon',       losses['reconstruction_loss'])
+        self.log('train_r2',          r2)
+        self.log('train_kl',          losses['kl_loss'])
+        self.log('train_kl_per_dim',  (losses['kl_loss'] / 
+                                       self.hparams['latent_dim']))
+        self.log('train_active_dims', active_units.float())
+        self.log('train_post_var',    logvar.exp().mean())
+        self.log('beta',              losses['kl_weight'])
+        
 
         return losses['total_loss']
     
@@ -206,18 +217,15 @@ class BetaVAE(pl.LightningModule):
         x_hat, mu, logvar = self(x)
         losses = self.compute_loss(x, x_hat, mu, logvar)
 
-        self.log(
-            "val_loss",
-            losses["total_loss"],
-            on_step=False,
-            on_epoch=True,
-            prog_bar=True,
-            sync_dist=False
-        )
+        r2 = self._compute_r2(x, x_hat)
+        kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
+
+        self.log('val_loss',       losses['total_loss'])
         self.log('val_recon',      losses['reconstruction_loss'])
+        self.log('val_r2',         r2)
         self.log('val_kl',         losses['kl_loss'])
-        self.log('val_kl_per_dim', losses['kl_loss'] 
-                 / self.hparams['latent_dim'])
+        self.log('val_kl_per_dim', (losses['kl_loss'] 
+                                    / self.hparams['latent_dim']))
         self.log('val_post_var',   logvar.exp().mean(), prog_bar = True)
 
         # Save the latent variables for epoch-end diagnostics
@@ -238,6 +246,11 @@ class BetaVAE(pl.LightningModule):
         self.log('test_post_var', logvar.exp().mean())
 
         return losses['total_loss']
+    
+    def _compute_r2(self, x: Tensor, x_hat: Tensor) -> Tensor:
+        mse = F.mse_loss(x_hat, x)
+        var = x.var()
+        return 1 - (mse / (var + 1e-8))
     
     # -------------------------------------------------------------------------
 
@@ -312,6 +325,25 @@ class BetaVAE(pl.LightningModule):
         if metric is None:
             return
         scheduler.step(metric)
+
+    def get_kl_weight(self) -> float:
+        """
+        Monotonic KL Warmup. Beta ramps from 0 to beta_max over `warmup_steps`.
+        More stable than cyclic annealing for Z-scored data.
+        """
+
+        cold_start = int(self.hparams.get('cold_start_epochs', 5))
+        warmup_steps = int(self.hparams.get('warmup_steps', 5000))
+
+        if self.current_epoch < cold_start: return 0.0
+
+        steps_elapsed = max(0, self.global_step - 
+                            (cold_start * self.trainer.num_training_batches))
+        
+        kl_weight = min(float(self.hparams.get('beta_max', 0.005)),
+                        steps_elapsed / max(1, warmup_steps))
+        
+        return float(kl_weight)
 
     # -------------------------------------------------------------------------
         

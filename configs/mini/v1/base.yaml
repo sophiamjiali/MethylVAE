@@ -5,7 +5,7 @@ project:
   root_dir: /cluster/home/t144807uhn/MethylVAE
 
 paths:
-  data_dir: /cluster/home/t144807uhn/data/cohorts/pancancer_v1/
+  data_dir: /cluster/home/t144807uhn/data/cohorts/pancancer_v2/
   experiment_dir: /cluster/home/t144807uhn/experiments/
   checkpoint_dir: /cluster/home/t144807uhn/checkpoints/
 

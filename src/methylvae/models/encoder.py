@@ -34,6 +34,8 @@ class MethylEncoder(nn.Module):
 
         self.input_dim = input_dim
         self.latent_dim = latent_dim
+        self.hidden_dims = hidden_dims
+        self.input_dropout = input_dropout
 
         # Build the encoder architecture
         modules: list[nn.Module] = [nn.Dropout(p = input_dropout)]
@@ -44,7 +46,8 @@ class MethylEncoder(nn.Module):
                 nn.Sequential(
                     nn.Linear(curr_dim, h_dim),
                     nn.LayerNorm(h_dim),
-                    nn.GELU()
+                    nn.GELU(),
+                    nn.Dropout(p = input_dropout)
                 )
             )
             curr_dim = h_dim

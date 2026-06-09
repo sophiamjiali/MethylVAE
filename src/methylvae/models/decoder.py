@@ -14,7 +14,8 @@ class MethylDecoder(nn.Module):
     def __init__(self,
                  input_dim: int,
                  latent_dim: int,
-                 hidden_dims: list):
+                 hidden_dims: list,
+                 dropout: float):
         """
         Parameters
         ----------
@@ -29,6 +30,7 @@ class MethylDecoder(nn.Module):
         self.input_dim = input_dim
         self.latent_dim = latent_dim
         self.hidden_dims = hidden_dims
+        self.dropout = dropout
 
         # Build the decoder architecture, mirroring the encoder
         modules = []
@@ -38,15 +40,13 @@ class MethylDecoder(nn.Module):
                 nn.Sequential(
                     nn.Linear(curr_dim, h_dim),      
                     nn.LayerNorm(h_dim),    
-                    nn.GELU()
+                    nn.GELU(),
+                    nn.Dropout(p = dropout)
                 )
             )
             curr_dim = h_dim
 
-        # Cap with Tanh to match [-1, 1] M-value scaling
         modules.append(nn.Linear(curr_dim, self.input_dim))
-        modules.append(nn.Tanh())
-        
         self.decoder = nn.Sequential(*modules)
 
     def forward(self, z):

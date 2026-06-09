@@ -38,7 +38,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
 
         # --- Hyperparameter sampling ------------------------------------------
 
-        trial_config["latent_dim"] = trial.suggest_int(
+        trial_config["latent_dim"] = trial.suggest_categorical(
             "latent_dim", *search_space["latent_dim"]
         )
         trial_config["beta"] = trial.suggest_float(
@@ -49,6 +49,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         )
 
         trial_config['max_epochs'] = search_space['max_epochs']
+        trial_config['free_bits'] = search_space['free_bits']
         trial_config['gradient_clip_val'] = search_space['gradient_clip_val']
         trial_config['n_startup_trials'] = search_space['n_startup_trials']
         trial_config['early_stopping_patience'] = search_space['early_stopping']['patience']
