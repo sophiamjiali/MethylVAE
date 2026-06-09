@@ -96,7 +96,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         val_post_var = metrics.get("val_post_var")
         val_post_var = float(val_post_var) if val_post_var is not None else 0.0
 
-        if val_post_var < 0.1:
+        if val_post_var < 0.4:
             return float("inf")
 
         trial.report(val_loss, step=trial.number)
