@@ -39,7 +39,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         # --- Hyperparameter sampling ------------------------------------------
 
         trial_config["latent_dim"] = trial.suggest_categorical(
-            "latent_dim", *search_space["latent_dim"]
+            "latent_dim", search_space["latent_dim"]
         )
         trial_config["beta"] = trial.suggest_float(
             "beta", *search_space["beta"], log=True
