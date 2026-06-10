@@ -50,5 +50,5 @@ def build_study(
             n_startup_trials=n_startup_trials,
             interval_steps=5,
         ),
-        load_if_exists=True,
+        load_if_exists=False,
     )

@@ -40,8 +40,7 @@ class MethylDecoder(nn.Module):
                 nn.Sequential(
                     nn.Linear(curr_dim, h_dim),      
                     nn.LayerNorm(h_dim),    
-                    nn.GELU(),
-                    nn.Dropout(p = dropout)
+                    nn.GELU()
                 )
             )
             curr_dim = h_dim
