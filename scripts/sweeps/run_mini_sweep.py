@@ -14,6 +14,7 @@
 #     --config_search  config/search_space.yaml
 # ==============================================================================
 
+import json
 import argparse
 from pathlib import Path
 
@@ -61,6 +62,22 @@ def main():
         n_trials = None,
         timeout = 24 * 3600
     )
+
+    print("OPTUNA FINISHED")
+    print("trials completed =", len(study.trials))
+    print("study state =", study.best_trial.number)
+
+    # Extract the best trial
+    best_trial = study.best_trial
+    payload = {
+        "best_value": best_trial.value,
+        "best_params": best_trial.params,
+        "best_trial_number": best_trial.number,
+    }
+
+    params_path = config["paths.params_dir"] / f"{study_name}_best_hparams.json"
+    with open(params_path, "w") as f:
+        json.dump(payload, f, indent=4)
 
 
 if __name__ == "__main__":

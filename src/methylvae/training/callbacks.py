@@ -38,8 +38,8 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
         filename          = "best-{epoch:02d}-{val_loss:.4f}",
         monitor           = "val_loss",
         mode              = "min",
-        save_top_k        = 1,
-        save_last         = True,
+        save_top_k        = 0,
+        save_last         = False,
         save_weights_only = False,
     )
 

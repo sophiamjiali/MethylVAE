@@ -108,13 +108,13 @@ def train(config: Dict,
         accelerator       = "cpu",
         devices           = 1,
         num_nodes         = 1,
-        strategy          = "auto",
         deterministic     = False,
         log_every_n_steps = 1,
         gradient_clip_val = config.get("gradient_clip_val", 1.0),
         gradient_clip_algorithm = "norm",
         check_val_every_n_epoch = 1,
-        enable_checkpointing = True
+        enable_checkpointing = False,
+        enable_progress_bar = False
     )
 
     trainer.fit(model, datamodule = datamodule)

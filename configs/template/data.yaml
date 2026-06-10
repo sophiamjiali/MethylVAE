@@ -12,6 +12,6 @@ val_adata_path:   /cluster/home/t144807uhn/data/cohorts/pancancer_v1/pancancer_v
 test_adata_path:  /cluster/home/t144807uhn/data/cohorts/pancancer_v1/pancancer_v1_test_adata.h5ad
 
 # DataLoader
-num_workers: 4
+num_workers: 1
 
 # [END]
