@@ -33,15 +33,15 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
     early_stopping_min_delta : Minimum improvement threshold for early stopping.
     """
 
-    checkpoint_callback = ModelCheckpoint(
-        dirpath           = checkpoint_dir,
-        filename          = "best-{epoch:02d}-{val_loss:.4f}",
-        monitor           = "val_loss",
-        mode              = "min",
-        save_top_k        = 0,
-        save_last         = False,
-        save_weights_only = False,
-    )
+    # checkpoint_callback = ModelCheckpoint(
+    #     dirpath           = checkpoint_dir,
+    #     filename          = "best-{epoch:02d}-{val_loss:.4f}",
+    #     monitor           = "val_loss",
+    #     mode              = "min",
+    #     save_top_k        = 0,
+    #     save_last         = False,
+    #     save_weights_only = False,
+    # )
 
     early_stop_callback = EarlyStopping(
         monitor   = "val_loss",
@@ -57,7 +57,7 @@ def configure_callbacks(trial: Optional[optuna.trial.Trial] = None,
     lr_monitor = LearningRateMonitor(logging_interval="step")
 
     callbacks = [
-        checkpoint_callback,
+        # checkpoint_callback,
         early_stop_callback,
         lr_monitor,
         GradientNormCallback(log_every_n_steps=50),
