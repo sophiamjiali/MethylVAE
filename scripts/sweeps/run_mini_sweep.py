@@ -50,6 +50,9 @@ def main():
     )
     storage    = f"sqlite:///{experiment_dir}/{study_name}.db"
 
+    print(f"study_name = {study_name}", flush=True)
+    print(f"storage = {storage}", flush=True)
+
     study = build_study(
         storage          = storage,
         study_name       = study_name,

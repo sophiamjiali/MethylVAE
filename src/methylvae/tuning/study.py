@@ -14,11 +14,15 @@ def get_or_create_study_name(experiment_dir, prefix, name):
     array_job_id = os.environ.get("SLURM_ARRAY_JOB_ID", "local")
     lockfile = os.path.join(experiment_dir, f"study_name_{array_job_id}.txt")
 
+    study_name = f"{prefix}_{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
+    # always prefer CLI intent
+    if name is not None:
+        return study_name
+
     if os.path.exists(lockfile):
         with open(lockfile) as f:
             return f.read().strip()
-
-    study_name = f"{prefix}_{name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     tmp = lockfile + ".tmp"
     with open(tmp, "w") as f:
@@ -34,8 +38,6 @@ def build_study(
     n_startup_trials: int,
     seed: int
 ):
-    print(f"study_name = {study_name}")
-    print(f"storage    = {storage}")
     return optuna.create_study(
         storage=storage,
         study_name=study_name,
