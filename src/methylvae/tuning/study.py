@@ -34,6 +34,8 @@ def build_study(
     n_startup_trials: int,
     seed: int
 ):
+    print(f"study_name = {study_name}")
+    print(f"storage    = {storage}")
     return optuna.create_study(
         storage=storage,
         study_name=study_name,
