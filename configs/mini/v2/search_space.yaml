@@ -1,0 +1,28 @@
+# ==============================================================================
+# Config:       search_space.yaml
+# Purpose:      Optuna sweep search space for BetaVAE hyperparam. optimisation.
+# ==============================================================================
+
+max_epochs: 200
+free_bits: 0.5
+gradient_clip_val: 1.0
+n_startup_trials: 7
+early_stopping:
+  patience: 50
+  min_delta: 1e-4
+
+encoder_dims: [4096, 1024, 256] # fixed
+
+latent_dim: [64, 128, 256]   # suggest_categorical
+
+beta: [0.0003, 0.001]      # suggest_float, log=True
+
+lr: [0.0001, 0.0003]       # suggest_float, log=True
+
+input_dropout: 0.1  # fixed
+
+num_cycles: 5 # fixed
+
+batch_size: 256 # fixed
+
+# [END]
