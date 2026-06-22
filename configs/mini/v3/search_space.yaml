@@ -19,7 +19,7 @@ beta: [0.0003, 0.001]      # suggest_float, log=True
 
 lr: [0.0001, 0.0003]       # suggest_float, log=True
 
-mu_reg_weight: [1e-5, 1e-3] # suggest_float, log=True
+mu_reg_weight: [0.00001, 0.001] # suggest_float, log=True
 
 input_dropout: 0.1  # fixed
 
