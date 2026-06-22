@@ -243,7 +243,6 @@ class BetaVAE(pl.LightningModule):
         self.log('val_active_dims', active_units.float())
         self.log('val_post_var',   logvar.exp().mean(), prog_bar = True)
         self.log('val_mu_norm',    mu_norm)
-        self.log('val_mu_reg',     losses['mu_reg'])
 
         # Save the latent variables for epoch-end diagnostics
         self.val_step_outputs.append({
