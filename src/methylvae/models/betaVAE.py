@@ -187,7 +187,8 @@ class BetaVAE(pl.LightningModule):
             "total_loss":          total_loss,
             "reconstruction_loss": recon_loss,
             "kl_loss":             kl_loss,
-            "beta":                beta
+            "beta":                beta,
+            "mu_reg":              mu_reg
         }
 
     # -------------------------------------------------------------------------
@@ -204,6 +205,9 @@ class BetaVAE(pl.LightningModule):
         kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
         active_units = (kl_per_dim.mean(dim = 0) > 0.1).sum()
 
+        # Log saturation
+        mu_norm = mu.norm(dim = -1).mean()
+
         self.log('train_loss',        losses['total_loss'])
         self.log('train_recon',       losses['reconstruction_loss'])
         self.log('train_r2',          r2)
@@ -213,6 +217,8 @@ class BetaVAE(pl.LightningModule):
         self.log('train_active_dims', active_units.float())
         self.log('train_post_var',    logvar.exp().mean())
         self.log('beta',              losses['beta'])
+        self.log('train_mu_norm',     mu_norm)
+        self.log('train_mu_reg',      losses['mu_reg'])
         
 
         return losses['total_loss']
@@ -236,7 +242,8 @@ class BetaVAE(pl.LightningModule):
                                     / self.hparams['latent_dim']))
         self.log('val_active_dims', active_units.float())
         self.log('val_post_var',   logvar.exp().mean(), prog_bar = True)
-        self.log('val_mu_norm', mu_norm)
+        self.log('val_mu_norm',    mu_norm)
+        self.log('val_mu_reg',     losses['mu_reg'])
 
         # Save the latent variables for epoch-end diagnostics
         self.val_step_outputs.append({
