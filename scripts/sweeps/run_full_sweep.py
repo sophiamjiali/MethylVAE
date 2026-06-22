@@ -68,7 +68,7 @@ def main():
     study.optimize(
         lambda trial: objective(trial, study_name, config),
         n_trials = None,
-        timeout  = 24 * 3600
+        timeout  = 48 * 3600
     )
 
 
