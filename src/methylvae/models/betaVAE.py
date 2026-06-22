@@ -35,7 +35,8 @@ class BetaVAE(pl.LightningModule):
                  free_bits: float = 0.5,
                  input_dropout: float = 0.1,
                  num_cycles: int = 4,
-                 lr: float = 3e-3):
+                 lr: float = 3e-3,
+                 mu_reg_weight: float = 1e-4):
         """
         Parameters
         ----------
@@ -58,6 +59,7 @@ class BetaVAE(pl.LightningModule):
         num_cycles    : Number of cyclical annealing cycles over full training.
                         Sweep: [2, 4]. Default 4.
         lr            : Adam learning rate. Default 3e-3.
+        mu_reg_weight : mu regulation weight. Default 1e-4.
         """
         
         super(BetaVAE, self).__init__()
@@ -175,7 +177,11 @@ class BetaVAE(pl.LightningModule):
         recon_loss = F.mse_loss(x_hat, x, reduction="mean")
         kl_loss    = self._compute_kl_loss(mu, logvar)
         beta       = self.get_beta()
-        total_loss = recon_loss + beta * kl_loss
+
+        # Add μ regulation to the loss function
+        mu_reg = self.hparams['mu_reg_weight'] * (mu ** 2).mean()
+
+        total_loss = recon_loss + beta * kl_loss + mu_reg
  
         return {
             "total_loss":          total_loss,
@@ -219,6 +225,8 @@ class BetaVAE(pl.LightningModule):
 
         r2 = self._compute_r2(x, x_hat)
         kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
+        active_units = (kl_per_dim.mean(dim = 0) > 0.1).sum()
+        mu_norm = mu.norm(dim = -1).mean()
 
         self.log('val_loss',       losses['total_loss'])
         self.log('val_recon',      losses['reconstruction_loss'])
@@ -226,7 +234,9 @@ class BetaVAE(pl.LightningModule):
         self.log('val_kl',         losses['kl_loss'])
         self.log('val_kl_per_dim', (losses['kl_loss'] 
                                     / self.hparams['latent_dim']))
+        self.log('val_active_dims', active_units.float())
         self.log('val_post_var',   logvar.exp().mean(), prog_bar = True)
+        self.log('val_mu_norm', mu_norm)
 
         # Save the latent variables for epoch-end diagnostics
         self.val_step_outputs.append({

@@ -47,6 +47,9 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         trial_config["lr"] = trial.suggest_float(
             "lr", *search_space["lr"], log=True
         )
+        trial_config['mu_reg_weight'] = trial.suggest_float(
+            "mu_reg_weight", *search_space['mu_reg_weight'], log=True
+        )
 
         trial_config['max_epochs'] = search_space['max_epochs']
         trial_config['free_bits'] = search_space['free_bits']
@@ -54,6 +57,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         trial_config['n_startup_trials'] = search_space['n_startup_trials']
         trial_config['early_stopping_patience'] = search_space['early_stopping']['patience']
         trial_config['early_stopping_min_delta'] = search_space['early_stopping']['min_delta']
+        
 
         if mini:
             trial_config['encoder_dims'] = search_space['encoder_dims']

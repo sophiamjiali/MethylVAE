@@ -67,6 +67,7 @@ def train(config: Dict,
         input_dropout = config["input_dropout"],
         num_cycles    = config["num_cycles"],
         lr            = config["lr"],
+        mu_reg_weight = config["mu_reg_weight"]
     )
 
     # --- Data -----------------------------------------------------------------
