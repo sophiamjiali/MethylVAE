@@ -63,7 +63,7 @@ def main():
     study.optimize(
         lambda trial: objective(trial, study_name, config, mini = True),
         n_trials = None,
-        timeout = 48 * 3600
+        timeout = 24 * 3600
     )
 
     print("OPTUNA FINISHED")

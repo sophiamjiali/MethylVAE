@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --output=/cluster/home/t144807uhn/logs/MethylVAE/mini/%x/%x_%j.out
 #SBATCH --error=/cluster/home/t144807uhn/logs/MethylVAE/mini/%x/%x_%j.err
-#SBATCH --time=48:00:00
+#SBATCH --time=24:30:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=24G

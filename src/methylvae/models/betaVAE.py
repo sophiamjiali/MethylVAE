@@ -87,7 +87,7 @@ class BetaVAE(pl.LightningModule):
     def encode(self, x):
         h       = self.encoder(x)
         z_mu    = self.z_mu(h)
-        z_logvar = self.z_logvar(h)
+        z_logvar = torch.clamp(self.z_logvar(h), min = -4, max = 4)
         return z_mu, z_logvar
 
     def decode(self, z):
