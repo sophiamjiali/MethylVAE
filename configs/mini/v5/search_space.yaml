@@ -21,7 +21,7 @@ lr: [0.0001, 0.0003]      # suggest_float, log=True
 
 mu_reg_weight: [0.0005, 0.005] # suggest_float, log=True
 
-decoder_dropout: [0.0, 0.2]   # suggest_float, log=True
+decoder_dropout: [0.0, 0.2]   # suggest_float, log=False (includes zero)
 
 input_dropout: 0.1  # fixed
 

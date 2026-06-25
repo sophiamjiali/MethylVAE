@@ -51,7 +51,7 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
             "mu_reg_weight", *search_space['mu_reg_weight'], log=True
         )
         trial_config['decoder_dropout'] = trial.suggest_float(
-            "decoder_dropout", *search_space['decoder_dropout'], log=True
+            "decoder_dropout", *search_space['decoder_dropout'], log=False
         )
 
         trial_config['max_epochs'] = search_space['max_epochs']
