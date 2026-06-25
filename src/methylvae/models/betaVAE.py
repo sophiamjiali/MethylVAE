@@ -33,6 +33,7 @@ class BetaVAE(pl.LightningModule):
                  decoder_dims: list,
                  beta: float = 0.005,
                  free_bits: float = 0.5,
+                 decoder_dropout: float = 0.1,
                  input_dropout: float = 0.1,
                  num_cycles: int = 4,
                  lr: float = 3e-3,
@@ -73,7 +74,7 @@ class BetaVAE(pl.LightningModule):
         self.z_mu     = nn.Linear(latent_dim, latent_dim)
         self.z_logvar = nn.Linear(latent_dim, latent_dim)
         self.decoder  = MethylDecoder(input_dim, latent_dim, 
-                                      decoder_dims, input_dropout)
+                                      decoder_dims, decoder_dropout)
 
 
         # Initialize the linear layers using Xavier Initialization
@@ -203,7 +204,7 @@ class BetaVAE(pl.LightningModule):
 
         # Compute latent space activity
         kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
-        active_units = (kl_per_dim.mean(dim = 0) > 0.1).sum()
+        active_units = (kl_per_dim.mean(dim = 0) > self.hparams['free_bits']).sum()
 
         # Log saturation
         mu_norm = mu.norm(dim = -1).mean()
@@ -231,7 +232,9 @@ class BetaVAE(pl.LightningModule):
 
         r2 = self._compute_r2(x, x_hat)
         kl_per_dim = -0.5 * (1.0 + logvar - mu.pow(2) - logvar.exp())
-        active_units = (kl_per_dim.mean(dim = 0) > 0.1).sum()
+
+        # Threshold should match free_bits
+        active_units = (kl_per_dim.mean(dim = 0) > self.hparams['free_bits']).sum()
         mu_norm = mu.norm(dim = -1).mean()
 
         self.log('val_loss',       losses['total_loss'])

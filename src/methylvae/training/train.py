@@ -58,16 +58,17 @@ def train(config: Dict,
 
     encoder_dims = config["encoder_dims"]
     model = BetaVAE(
-        input_dim     = config["input_dim"],
-        latent_dim    = config["latent_dim"],
-        encoder_dims  = encoder_dims,
-        decoder_dims  = list(reversed(encoder_dims[:-1])),
-        beta          = config["beta"],
-        free_bits     = config.get("free_bits", 0.5),
-        input_dropout = config["input_dropout"],
-        num_cycles    = config["num_cycles"],
-        lr            = config["lr"],
-        mu_reg_weight = config["mu_reg_weight"]
+        input_dim       = config["input_dim"],
+        latent_dim      = config["latent_dim"],
+        encoder_dims    = encoder_dims,
+        decoder_dims    = list(reversed(encoder_dims[:-1])),
+        beta            = config["beta"],
+        free_bits       = config.get("free_bits", 0.5),
+        decoder_dropout = config['decoder_dropout'],
+        input_dropout   = config["input_dropout"],
+        num_cycles      = config["num_cycles"],
+        lr              = config["lr"],
+        mu_reg_weight   = config["mu_reg_weight"]
     )
 
     # --- Data -----------------------------------------------------------------

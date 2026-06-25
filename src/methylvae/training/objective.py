@@ -50,6 +50,9 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         trial_config['mu_reg_weight'] = trial.suggest_float(
             "mu_reg_weight", *search_space['mu_reg_weight'], log=True
         )
+        trial_config['decoder_dropout'] = trial.suggest_float(
+            "decoder_dropout", *search_space['decoder_dropout'], log=True
+        )
 
         trial_config['max_epochs'] = search_space['max_epochs']
         trial_config['free_bits'] = search_space['free_bits']
@@ -58,7 +61,6 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         trial_config['early_stopping_patience'] = search_space['early_stopping']['patience']
         trial_config['early_stopping_min_delta'] = search_space['early_stopping']['min_delta']
         
-
         if mini:
             trial_config['encoder_dims'] = search_space['encoder_dims']
             trial_config["num_cycles"] = search_space['num_cycles']
@@ -101,8 +103,10 @@ def objective(trial, study_name: str, config: dict, mini: bool = False):
         val_post_var = metrics.get("val_post_var")
         val_post_var = float(val_post_var) if val_post_var is not None else 0.0
 
-        if val_post_var < 0.4:
-            return float("inf")
+        # Collapse guard against active dimensions and latent dimensions ratio
+        active_dims = metrics.get('val_active_dims', 0)
+        if active_dims < 0.5 * trial_config['latent_dim']:
+            raise optuna.exceptions.TrialPruned() 
 
         trial.report(val_loss, step=trial.number)
         if trial.should_prune():
