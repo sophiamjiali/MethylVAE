@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --output=/cluster/home/t144807uhn/marginal_%j.out
-#SBATCH --error=/cluster/home/t144807uhn/marginal_%j.err
+#SBATCH --output=/cluster/home/t144807uhn/baseline_%j.out
+#SBATCH --error=/cluster/home/t144807uhn/baseline_%j.err
 #SBATCH --time=6:30:00
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1

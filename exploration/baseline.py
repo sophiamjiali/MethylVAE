@@ -35,6 +35,7 @@ class AE(nn.Module):
 
 
 def main():
+    print("Entered main")
     parser = argparse.ArgumentParser()
     parser.add_argument("data_path", type=str)
     parser.add_argument("--layer", type=str, default=None)
@@ -45,7 +46,7 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
     print(f"Using device: {device}")
 
     print(f"Loading {args.data_path} ...")
