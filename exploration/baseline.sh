@@ -8,13 +8,6 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=sophiamjia.li@mail.utoronto.ca
 
-# Make the project-specific logs directory
-mkdir -p /cluster/home/t144807uhn/logs/MethylVAE/mini/$1
-
-module load python3/3.12.11
-module load gcc/12   # or newer available on the cluster
-export LD_LIBRARY_PATH=$(gcc -print-search-dirs | grep libraries | cut -d= -f2):$LD_LIBRARY_PATH
-
 # Activate the virtual environment
 source /cluster/home/t144807uhn/envs/methylvae-env/bin/activate
 
