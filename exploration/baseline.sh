@@ -26,7 +26,7 @@ echo "GPU:                $CUDA_VISIBLE_DEVICES"
 echo "Start time:         $(date)"
 echo "=========================================="
 
-python baseline.py \
+python exploration/baseline.py \
     /cluster/home/t144807uhn/data/cohorts/pancancer_v2/pancancer_v2_adata.h5ad \
     --latent_dim 128
 
